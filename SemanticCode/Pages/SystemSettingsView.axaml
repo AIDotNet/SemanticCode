@@ -92,6 +92,56 @@
                                   VerticalAlignment="Center"/>
                 </Grid>
             </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="16">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="{Binding UpdateLabel}" 
+                               FontWeight="SemiBold"
+                               FontSize="16"/>
+                    <TextBlock Text="检查应用程序更新"
+                               Opacity="0.8"
+                               FontSize="14"/>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Grid.Column="0"
+                                   Text="{Binding UpdateStatus}"
+                                   VerticalAlignment="Center"
+                                   FontSize="14"/>
+                        <Button Grid.Column="1"
+                                Content="检查更新"
+                                Command="{Binding CheckUpdateCommand}"
+                                IsEnabled="{Binding !IsCheckingUpdate}"
+                                MinWidth="100"/>
+                    </Grid>
+                    
+                    <!-- Update details when available -->
+                    <Border IsVisible="{Binding LatestUpdate.IsNewerVersion}"
+                            Background="{DynamicResource AccentFillColorDefaultBrush}"
+                            CornerRadius="4"
+                            Padding="12"
+                            Margin="0,8,0,0">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="{Binding LatestUpdate.Version, StringFormat='新版本: v{0}'}"
+                                       FontWeight="SemiBold"
+                                       Foreground="White"/>
+                            <TextBlock Text="{Binding LatestUpdate.Description}"
+                                       Foreground="White"
+                                       TextWrapping="Wrap"
+                                       MaxHeight="100"
+                                       IsVisible="{Binding LatestUpdate.Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                            <Button Content="查看发布页面"
+                                    Background="Transparent"
+                                    BorderBrush="White"
+                                    Foreground="White"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

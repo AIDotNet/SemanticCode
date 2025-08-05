@@ -44,11 +44,13 @@ jobs:
 
       - name: Build Windows executable
         run: |
-          dotnet publish SemanticCode.Desktop/SemanticCode.Desktop.csproj -c Release -r win-x64 --self-contained true -o ./publish/win-x64
+          dotnet publish SemanticCode.Desktop/SemanticCode.Desktop.csproj -c Release -r win-x64 --self-contained true -o ./publish/win-x64 -p:DebugType=None -p:DebugSymbols=false
 
-      - name: Create Windows archive
+      - name: Remove debug files and create Windows archive
         run: |
           cd publish/win-x64
+          # Remove .pdb files if any exist
+          if ls *.pdb 1> /dev/null 2>&1; then rm *.pdb; fi
           7z a ../../SemanticCode-${{ needs.prepare.outputs.version }}-win-x64.zip *
 
       - name: Upload Windows artifact
@@ -74,11 +76,13 @@ jobs:
 
       - name: Build Linux executable
         run: |
-          dotnet publish SemanticCode.Desktop/SemanticCode.Desktop.csproj -c Release -r linux-x64 --self-contained true -o ./publish/linux-x64
+          dotnet publish SemanticCode.Desktop/SemanticCode.Desktop.csproj -c Release -r linux-x64 --self-contained true -o ./publish/linux-x64 -p:DebugType=None -p:DebugSymbols=false
 
-      - name: Create Linux archive
+      - name: Remove debug files and create Linux archive
         run: |
           cd publish/linux-x64
+          # Remove .pdb files if any exist
+          find . -name "*.pdb" -type f -delete
           tar -czf ../../SemanticCode-${{ needs.prepare.outputs.version }}-linux-x64.tar.gz *
 
       - name: Upload Linux artifact
