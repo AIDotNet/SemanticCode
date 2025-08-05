@@ -63,10 +63,6 @@
                                 Content="刷新"
                                 Command="{Binding RefreshCommand}"
                                 Margin="0,0,8,0"/>
-                        
-                        <Button Grid.Column="2" 
-                                Content="添加Agent"
-                                Command="{Binding AddAgentCommand}"/>
                     </Grid>
                     
                     <ListBox ItemsSource="{Binding Agents}"
@@ -76,6 +72,17 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate x:DataType="models:AgentModel">
                                 <Grid Margin="0,8,0,8">
+                                    <Grid.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="用编辑器打开" 
+                                                      
+                                                      Command="{Binding $parent[UserControl].DataContext.EditAgentInEditorCommand}"
+                                                      CommandParameter="{Binding}"/>
+                                            <MenuItem Header="删除" 
+                                                      Command="{Binding $parent[UserControl].DataContext.DeleteAgentCommand}"
+                                                      CommandParameter="{Binding}"/>
+                                        </ContextMenu>
+                                    </Grid.ContextMenu>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
@@ -104,7 +111,8 @@
                     CornerRadius="8"
                     Padding="16"
                     Margin="16,0,0,0">
-                <StackPanel Spacing="16">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Spacing="16">
                     <TextBlock Text="Agent详情" 
                                FontSize="18" 
                                FontWeight="SemiBold"/>
@@ -225,6 +233,7 @@
                                VerticalAlignment="Center"
                                IsVisible="{Binding SelectedAgent, Converter={x:Static ObjectConverters.IsNull}}"/>
                 </StackPanel>
+                </ScrollViewer>
             </Border>
         </Grid>
     </Grid>

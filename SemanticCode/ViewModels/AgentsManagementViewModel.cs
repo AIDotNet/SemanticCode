@@ -1,9 +1,15 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Layout;
+using Avalonia.Media;
 using ReactiveUI;
 using SemanticCode.Models;
 using SemanticCode.Services;
@@ -28,6 +34,7 @@ public class AgentsManagementViewModel : ViewModelBase, IDisposable
     
     public ReactiveCommand<Unit, Unit> AddAgentCommand { get; }
     public ReactiveCommand<AgentModel, Unit> EditAgentCommand { get; }
+    public ReactiveCommand<AgentModel, Unit> EditAgentInEditorCommand { get; }
     public ReactiveCommand<AgentModel, Unit> DeleteAgentCommand { get; }
     public ReactiveCommand<Unit, Unit> RefreshCommand { get; }
     
@@ -37,6 +44,7 @@ public class AgentsManagementViewModel : ViewModelBase, IDisposable
         
         AddAgentCommand = ReactiveCommand.Create(AddAgent);
         EditAgentCommand = ReactiveCommand.Create<AgentModel>(EditAgent);
+        EditAgentInEditorCommand = ReactiveCommand.Create<AgentModel>(EditAgentInEditor);
         DeleteAgentCommand = ReactiveCommand.Create<AgentModel>(DeleteAgent);
         RefreshCommand = ReactiveCommand.Create(LoadAgents);
         
@@ -115,10 +123,37 @@ public class AgentsManagementViewModel : ViewModelBase, IDisposable
         }
     }
     
-    private void DeleteAgent(AgentModel agent)
+    private void EditAgentInEditor(AgentModel agent)
+    {
+        if (agent != null && !string.IsNullOrEmpty(agent.FilePath) && File.Exists(agent.FilePath))
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = agent.FilePath,
+                    UseShellExecute = true
+                });
+                System.Diagnostics.Debug.WriteLine($"Opened agent file in editor: {agent.FilePath}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to open agent file in editor: {ex.Message}");
+            }
+        }
+    }
+    
+    private async void DeleteAgent(AgentModel agent)
     {
         if (agent != null && !string.IsNullOrEmpty(agent.FileName))
         {
+            // 显示确认对话框
+            var result = await ShowDeleteConfirmationDialog(agent);
+            if (result != true)
+            {
+                return;
+            }
+            
             if (_directoryService.DeleteAgent(agent.FileName))
             {
                 Agents.Remove(agent);
@@ -133,6 +168,99 @@ public class AgentsManagementViewModel : ViewModelBase, IDisposable
             {
                 System.Diagnostics.Debug.WriteLine($"Failed to delete agent: {agent.Name}");
             }
+        }
+    }
+    
+    private async Task<bool> ShowDeleteConfirmationDialog(AgentModel agent)
+    {
+        try
+        {
+            var mainWindow = Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
+                ? desktop.MainWindow
+                : null;
+                
+            if (mainWindow == null)
+                return false;
+                
+            var dialog = new Window
+            {
+                Title = "确认删除",
+                Width = 400,
+                Height = 200,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                CanResize = false
+            };
+            
+            var panel = new StackPanel
+            {
+                Margin = new Thickness(20),
+                Spacing = 20
+            };
+            
+            panel.Children.Add(new TextBlock
+            {
+                Text = $"确定要删除Agent \"{agent.Name}\" 吗？",
+                FontSize = 16,
+                TextWrapping = TextWrapping.Wrap
+            });
+            
+            panel.Children.Add(new TextBlock
+            {
+                Text = "此操作无法撤销。",
+                FontSize = 12,
+                Foreground = Brushes.Gray
+            });
+            
+            var buttonPanel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Spacing = 10
+            };
+            
+            var cancelButton = new Button
+            {
+                Content = "取消",
+                Width = 80,
+                Height = 32
+            };
+            
+            var deleteButton = new Button
+            {
+                Content = "删除",
+                Width = 80,
+                Height = 32,
+                Background = Brushes.Red,
+                Foreground = Brushes.White
+            };
+            
+            bool? result = null;
+            
+            cancelButton.Click += (s, e) =>
+            {
+                result = false;
+                dialog.Close();
+            };
+            
+            deleteButton.Click += (s, e) =>
+            {
+                result = true;
+                dialog.Close();
+            };
+            
+            buttonPanel.Children.Add(cancelButton);
+            buttonPanel.Children.Add(deleteButton);
+            panel.Children.Add(buttonPanel);
+            
+            dialog.Content = panel;
+            
+            await dialog.ShowDialog(mainWindow);
+            return result == true;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error showing delete confirmation dialog: {ex.Message}");
+            return false;
         }
     }
     
@@ -153,8 +281,6 @@ public class AgentsManagementViewModel : ViewModelBase, IDisposable
             };
             
             _fileWatcher.Changed += OnFileChanged;
-            _fileWatcher.Created += OnFileCreated;
-            _fileWatcher.Deleted += OnFileDeleted;
             _fileWatcher.Renamed += OnFileRenamed;
             
             System.Diagnostics.Debug.WriteLine($"File watcher setup for: {agentsDirectory}");
@@ -175,24 +301,6 @@ public class AgentsManagementViewModel : ViewModelBase, IDisposable
         }, TaskScheduler.FromCurrentSynchronizationContext());
     }
     
-    private void OnFileCreated(object sender, FileSystemEventArgs e)
-    {
-        System.Diagnostics.Debug.WriteLine($"File created: {e.Name}");
-        Task.Delay(500).ContinueWith(_ => 
-        {
-            LoadAgents();
-        }, TaskScheduler.FromCurrentSynchronizationContext());
-    }
-    
-    private void OnFileDeleted(object sender, FileSystemEventArgs e)
-    {
-        System.Diagnostics.Debug.WriteLine($"File deleted: {e.Name}");
-        Task.Delay(500).ContinueWith(_ => 
-        {
-            LoadAgents();
-        }, TaskScheduler.FromCurrentSynchronizationContext());
-    }
-    
     private void OnFileRenamed(object sender, RenamedEventArgs e)
     {
         System.Diagnostics.Debug.WriteLine($"File renamed: {e.OldName} -> {e.Name}");
@@ -207,8 +315,6 @@ public class AgentsManagementViewModel : ViewModelBase, IDisposable
         if (_fileWatcher != null)
         {
             _fileWatcher.Changed -= OnFileChanged;
-            _fileWatcher.Created -= OnFileCreated;
-            _fileWatcher.Deleted -= OnFileDeleted;
             _fileWatcher.Renamed -= OnFileRenamed;
             _fileWatcher.Dispose();
             _fileWatcher = null;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace SemanticCode.Services;
@@ -25,22 +26,24 @@ public class AgentFileParser
         try
         {
             var content = File.ReadAllText(filePath);
-            var frontMatter = ExtractFrontMatter(content);
+            var parsedData = ExtractFrontMatter(content);
             
-            if (!frontMatter.ContainsKey("name"))
+            if (!parsedData.ContainsKey("name"))
             {
                 return null;
             }
 
             var agentInfo = new AgentInfo
             {
-                Name = frontMatter["name"],
-                Description = frontMatter.ContainsKey("description") ? frontMatter["description"] : string.Empty,
-                Color = frontMatter.ContainsKey("color") ? frontMatter["color"] : "default",
+                Name = parsedData["name"],
+                Description = parsedData.ContainsKey("description") ? parsedData["description"] : string.Empty,
+                Color = parsedData.ContainsKey("color") ? parsedData["color"] : "default",
                 FileName = Path.GetFileName(filePath),
                 FilePath = filePath,
                 Content = content,
-                FrontMatter = frontMatter
+                PreContent = parsedData.ContainsKey("_precontent") ? parsedData["_precontent"] : string.Empty,
+                MainContent = parsedData.ContainsKey("_maincontent") ? parsedData["_maincontent"] : string.Empty,
+                FrontMatter = parsedData.Where(kvp => !kvp.Key.StartsWith("_")).ToDictionary(kvp => kvp.Key, kvp => kvp.Value)
             };
 
             return agentInfo;
@@ -144,28 +147,39 @@ public class AgentFileParser
     {
         try
         {
-            var frontMatter = new List<string>
+            var contentParts = new List<string>();
+            
+            // 添加前置内容（如果有）
+            if (!string.IsNullOrEmpty(agentInfo.PreContent))
             {
-                "---",
-                $"name: {agentInfo.Name}",
-                $"description: {agentInfo.Description}",
-                $"color: {agentInfo.Color}"
-            };
+                contentParts.Add(agentInfo.PreContent);
+            }
+            
+            // 添加 front matter
+            contentParts.Add("---");
+            contentParts.Add($"name: {agentInfo.Name}");
+            contentParts.Add($"description: {agentInfo.Description}");
+            contentParts.Add($"color: {agentInfo.Color}");
             
             // 添加其他 front matter 属性
             foreach (var kvp in agentInfo.FrontMatter)
             {
                 if (kvp.Key != "name" && kvp.Key != "description" && kvp.Key != "color")
                 {
-                    frontMatter.Add($"{kvp.Key}: {kvp.Value}");
+                    contentParts.Add($"{kvp.Key}: {kvp.Value}");
                 }
             }
             
-            frontMatter.Add("---");
-            frontMatter.Add("");
-            frontMatter.Add(agentInfo.Content);
+            contentParts.Add("---");
             
-            File.WriteAllText(agentInfo.FilePath, string.Join("\n", frontMatter));
+            // 添加主要内容（如果有）
+            if (!string.IsNullOrEmpty(agentInfo.MainContent))
+            {
+                contentParts.Add("");
+                contentParts.Add(agentInfo.MainContent);
+            }
+            
+            File.WriteAllText(agentInfo.FilePath, string.Join("\n", contentParts));
             return true;
         }
         catch (Exception ex)
