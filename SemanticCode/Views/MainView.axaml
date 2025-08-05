@@ -31,6 +31,36 @@
             </ui:NavigationViewItem>
         </ui:NavigationView.MenuItems>
         
+        <ui:NavigationView.FooterMenuItems>
+            <ui:NavigationViewItem Content="GitHub" Tag="GitHub">
+                <ui:NavigationViewItem.IconSource>
+                    <ui:SymbolIconSource Symbol="Globe"/>
+                </ui:NavigationViewItem.IconSource>
+            </ui:NavigationViewItem>
+        </ui:NavigationView.FooterMenuItems>
+        
+        <ui:NavigationView.PaneFooter>
+            <StackPanel Margin="16,8" IsVisible="{Binding #NavView.IsPaneOpen}">
+                <TextBlock FontSize="12" Opacity="0.6">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="当前版本: {0}">
+                            <Binding Path="VersionInfo.CurrentVersion" FallbackValue="加载中..."/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <Button Content="发现新版本，点击查看" 
+                        FontSize="11" 
+                        Background="Orange" 
+                        Foreground="White"
+                        Margin="0,4,0,0"
+                        Click="OnUpdateAvailableClick"
+                        IsVisible="{Binding VersionInfo.HasUpdate, FallbackValue=False}"/>
+                <TextBlock FontSize="11" Opacity="0.5" Foreground="Red"
+                          IsVisible="{Binding VersionInfo.IsCheckSuccessful, Converter={x:Static BoolConverters.Not}, FallbackValue=False}"
+                          Text="{Binding VersionInfo.ErrorMessage, FallbackValue=''}"/>
+            </StackPanel>
+        </ui:NavigationView.PaneFooter>
+        
         <ui:Frame Name="FrameView"/>
     </ui:NavigationView>
 </UserControl>
