@@ -1,0 +1,97 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:SemanticCode.ViewModels"
+             xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SemanticCode.Pages.SystemSettingsView"
+             x:DataType="vm:SystemSettingsViewModel">
+    <Design.DataContext>
+        <vm:SystemSettingsViewModel />
+    </Design.DataContext>
+    
+    <ScrollViewer>
+        <StackPanel Margin="24" Spacing="24" MaxWidth="600">
+            <TextBlock Text="{Binding Title}" 
+                       FontSize="24" 
+                       FontWeight="Bold" 
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,24"/>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="16">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="{Binding ThemeLabel}" 
+                               FontWeight="SemiBold"
+                               FontSize="16"/>
+                    <TextBlock Text="选择应用程序主题"
+                               Opacity="0.8"
+                               FontSize="14"/>
+                    <ComboBox ItemsSource="{Binding AvailableThemes}"
+                              SelectedItem="{Binding SelectedTheme}"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="16">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="{Binding LanguageLabel}" 
+                               FontWeight="SemiBold"
+                               FontSize="16"/>
+                    <TextBlock Text="选择应用程序语言"
+                               Opacity="0.8"
+                               FontSize="14"/>
+                    <ComboBox ItemsSource="{Binding AvailableLanguages}"
+                              SelectedItem="{Binding SelectedLanguage}"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="16">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Grid.Column="0" Spacing="8">
+                        <TextBlock Text="{Binding AutoStartLabel}" 
+                                   FontWeight="SemiBold"
+                                   FontSize="16"/>
+                        <TextBlock Text="开机时自动启动应用程序"
+                                   Opacity="0.8"
+                                   FontSize="14"/>
+                    </StackPanel>
+                    <ToggleSwitch Grid.Column="1" 
+                                  IsChecked="{Binding AutoStart}"
+                                  VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="16">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Grid.Column="0" Spacing="8">
+                        <TextBlock Text="{Binding NotificationLabel}" 
+                                   FontWeight="SemiBold"
+                                   FontSize="16"/>
+                        <TextBlock Text="启用系统通知"
+                                   Opacity="0.8"
+                                   FontSize="14"/>
+                    </StackPanel>
+                    <ToggleSwitch Grid.Column="1" 
+                                  IsChecked="{Binding EnableNotifications}"
+                                  VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

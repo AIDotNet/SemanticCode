@@ -1,0 +1,8 @@
+<Directives xmlns="http://schemas.microsoft.com/netfx/2013/01/metadata">
+    <Application>
+        <Assembly Name="FluentAvaloniaUI" Dynamic="Required All" />
+        <Assembly Name="Avalonia.Markup.Xaml" Dynamic="Required All" />
+      <Assembly Name="Avalonia" Dynamic="Required All" />
+      <Assembly Name="Avalonia.Themes" Dynamic="Required All" />
+    </Application>
+</Directives>

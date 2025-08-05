@@ -1,0 +1,247 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:SemanticCode.ViewModels"
+             xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SemanticCode.Pages.ClaudeCodeSettingsView"
+             x:DataType="vm:ClaudeCodeSettingsViewModel">
+    <Design.DataContext>
+        <vm:ClaudeCodeSettingsViewModel />
+    </Design.DataContext>
+    
+    <ScrollViewer>
+        <StackPanel Margin="24" Spacing="24" MaxWidth="800">
+            <!-- Header -->
+            <StackPanel Spacing="8" HorizontalAlignment="Center">
+                <TextBlock Text="{Binding Title}" 
+                           FontSize="28" 
+                           FontWeight="Bold" 
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding StatusMessage}" 
+                           FontSize="14" 
+                           Opacity="0.7"
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+            
+            <!-- Action Buttons -->
+            <StackPanel Orientation="Horizontal" 
+                        HorizontalAlignment="Center" 
+                        Spacing="12">
+                <Button Content="保存配置" 
+                        Command="{Binding SaveCommand}"
+                        IsEnabled="{Binding HasChanges}"/>
+                <Button Content="重新加载" 
+                        Command="{Binding LoadCommand}"/>
+                <Button Content="重置默认" 
+                        Command="{Binding ResetCommand}"/>
+                <Button Content="打开配置目录" 
+                        Command="{Binding OpenSettingsDirectoryCommand}"/>
+            </StackPanel>
+            
+            <!-- API Configuration -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="20">
+                <Grid RowDefinitions="Auto,12,*" ColumnDefinitions="*,*">
+                    <TextBlock Text="API 配置" 
+                               FontWeight="Bold"
+                               FontSize="18"
+                               Grid.Row="0" Grid.ColumnSpan="2"/>
+                    
+                    <StackPanel Grid.Row="2" Grid.Column="0" Spacing="16" Margin="0,0,10,0">
+                        <!-- API Key -->
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="{Binding ApiKeyLabel}" 
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Text="输入您的 Anthropic API 密钥"
+                                       Opacity="0.7"
+                                       FontSize="13"/>
+                            <TextBox Text="{Binding ApiKey}" 
+                                     PasswordChar="*"
+                                     Watermark="sk-ant-xxxxx"/>
+                        </StackPanel>
+                        
+                        <!-- Base URL -->
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="{Binding BaseUrlLabel}" 
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Text="API 基础 URL 地址"
+                                       Opacity="0.7"
+                                       FontSize="13"/>
+                            <Grid RowDefinitions="Auto,Auto">
+                                <ComboBox Grid.Row="0"
+                                          ItemsSource="{Binding AvailableBaseUrls}"
+                                          SelectedItem="{Binding BaseUrl}"
+                                          SelectionChanged="BaseUrlComboBox_SelectionChanged"
+                                          Name="BaseUrlComboBox"/>
+                                <TextBox Grid.Row="1" 
+                                         Text="{Binding BaseUrl}"
+                                         Margin="0,4,0,0"
+                                         Watermark="或直接输入自定义URL"/>
+                            </Grid>
+                        </StackPanel>
+                        
+                        <!-- Main Model -->
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="{Binding ModelLabel}" 
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Text="主要会话模型（用于复杂推理）"
+                                       Opacity="0.7"
+                                       FontSize="13"/>
+                            <Grid RowDefinitions="Auto,Auto">
+                                <ComboBox Grid.Row="0"
+                                          ItemsSource="{Binding AvailableModels}"
+                                          SelectedItem="{Binding SelectedModel}"
+                                          SelectionChanged="ModelComboBox_SelectionChanged"
+                                          Name="ModelComboBox"/>
+                                <TextBox Grid.Row="1" 
+                                         Text="{Binding SelectedModel}"
+                                         Margin="0,4,0,0"
+                                         Watermark="或直接输入自定义模型名称"/>
+                            </Grid>
+                        </StackPanel>
+                        
+                        <!-- Small Fast Model -->
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="{Binding SmallFastModelLabel}" 
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Text="后台快速模型（用于工具调用和辅助任务）"
+                                       Opacity="0.7"
+                                       FontSize="13"/>
+                            <Grid RowDefinitions="Auto,Auto">
+                                <ComboBox Grid.Row="0"
+                                          ItemsSource="{Binding AvailableSmallFastModels}"
+                                          SelectedItem="{Binding SelectedSmallFastModel}"
+                                          SelectionChanged="SmallFastModelComboBox_SelectionChanged"
+                                          Name="SmallFastModelComboBox"/>
+                                <TextBox Grid.Row="1" 
+                                         Text="{Binding SelectedSmallFastModel}"
+                                         Margin="0,4,0,0"
+                                         Watermark="或直接输入自定义快速模型名称"/>
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Row="2" Grid.Column="1" Spacing="16" Margin="10,0,0,0">
+                        <!-- Max Tokens -->
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="{Binding MaxTokensLabel}" 
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Text="响应的最大 token 数量"
+                                       Opacity="0.7"
+                                       FontSize="13"/>
+                            <NumericUpDown Value="{Binding MaxTokens}"
+                                           Minimum="100"
+                                           Maximum="200000"
+                                           Increment="100"/>
+                        </StackPanel>
+                        
+                        <!-- Temperature -->
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="{Binding TemperatureLabel}" 
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Text="控制响应的随机性 (0.0 - 2.0)"
+                                       Opacity="0.7"
+                                       FontSize="13"/>
+                            <NumericUpDown Value="{Binding Temperature}"
+                                           Minimum="0.0"
+                                           Maximum="2.0"
+                                           Increment="0.1"
+                                           FormatString="F1"/>
+                        </StackPanel>
+                        
+                        <!-- Debug Mode -->
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="{Binding DebugModeLabel}" 
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Text="启用调试模式以查看详细日志"
+                                       Opacity="0.7"
+                                       FontSize="13"/>
+                            <ToggleSwitch IsChecked="{Binding DebugMode}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Border>
+            
+            <!-- Advanced Configuration -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="20">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="高级配置" 
+                               FontWeight="Bold"
+                               FontSize="18"/>
+                    
+                    <Grid ColumnDefinitions="*,*">
+                        <StackPanel Grid.Column="0" Spacing="16" Margin="0,0,10,0">
+                            <!-- Max Context Tokens -->
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="{Binding MaxContextTokensLabel}" 
+                                           FontWeight="SemiBold"/>
+                                <TextBlock Text="最大上下文 token 数量"
+                                           Opacity="0.7"
+                                           FontSize="13"/>
+                                <NumericUpDown Value="{Binding MaxContextTokens}"
+                                               Minimum="1000"
+                                               Maximum="1000000"
+                                               Increment="1000"/>
+                            </StackPanel>
+                            
+                            <!-- Memory Path -->
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="{Binding MemoryPathLabel}" 
+                                           FontWeight="SemiBold"/>
+                                <TextBlock Text="自定义记忆文件存储路径（可选）"
+                                           Opacity="0.7"
+                                           FontSize="13"/>
+                                <TextBox Text="{Binding MemoryPath}"
+                                         Watermark="留空使用默认路径"/>
+                            </StackPanel>
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Column="1" Spacing="16" Margin="10,0,0,0">
+                            <!-- Disabled Tools -->
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="{Binding DisabledToolsLabel}" 
+                                           FontWeight="SemiBold"/>
+                                <TextBlock Text="禁用的工具列表（用逗号分隔）"
+                                           Opacity="0.7"
+                                           FontSize="13"/>
+                                <TextBox Text="{Binding DisabledTools}"
+                                         Watermark="例如: bash,edit,write"
+                                         AcceptsReturn="True"
+                                         Height="80"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+            
+            <!-- Configuration File Info -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="16">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="配置文件信息" 
+                               FontWeight="SemiBold"
+                               FontSize="16"/>
+                    <TextBlock Opacity="0.7" FontSize="13">
+                        <Run Text="配置文件位置: "/>
+                        <Run Text="C:\Users\当前用户\.claude\settings.json" FontFamily="Consolas"/>
+                    </TextBlock>
+                    <TextBlock Text="修改配置后请点击'保存配置'按钮以生效。"
+                               Opacity="0.7"
+                               FontSize="13"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

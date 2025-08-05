@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:SemanticCode.ViewModels"
+             xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SemanticCode.Views.MainView"
+             x:DataType="vm:MainViewModel">
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainViewModel />
+    </Design.DataContext>
+    
+    <ui:NavigationView Name="NavView"
+                       IsPaneOpen="False"
+                       IsBackButtonVisible="False"
+                       IsSettingsVisible="True"
+                       SelectionChanged="OnSelectionChanged">
+        <ui:NavigationView.MenuItems>
+            <ui:NavigationViewItem Content="首页" Tag="Home">
+                <ui:NavigationViewItem.IconSource>
+                    <ui:SymbolIconSource Symbol="Home"/>
+                </ui:NavigationViewItem.IconSource>
+            </ui:NavigationViewItem>
+            <ui:NavigationViewItem Content="Claude Code设置" Tag="ClaudeCodeSettings">
+                <ui:NavigationViewItem.IconSource>
+                    <ui:SymbolIconSource Symbol="Code"/>
+                </ui:NavigationViewItem.IconSource>
+            </ui:NavigationViewItem>
+        </ui:NavigationView.MenuItems>
+        
+        <ui:Frame Name="FrameView"/>
+    </ui:NavigationView>
+</UserControl>

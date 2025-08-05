@@ -1,0 +1,86 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:SemanticCode.ViewModels"
+             xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
+             x:Class="SemanticCode.Pages.HomeView"
+             x:DataType="vm:HomeViewModel">
+    <Design.DataContext>
+        <vm:HomeViewModel />
+    </Design.DataContext>
+    
+    <ScrollViewer Padding="24" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Spacing="32">
+            <!-- Header Section -->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <!-- Title and Version -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12">
+                    <TextBlock Text="{Binding Title}" 
+                               FontSize="36" 
+                               FontWeight="Bold"/>
+                    <Border Background="{DynamicResource AccentButtonBackground}" 
+                            CornerRadius="12"
+                            Padding="8,4"
+                            VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Version}" 
+                                   FontSize="12" 
+                                   Foreground="{DynamicResource AccentButtonForeground}"/>
+                    </Border>
+                </StackPanel>
+                
+                <!-- Welcome Message -->
+                <TextBlock Grid.Row="1"
+                           Text="{Binding WelcomeMessage}" 
+                           FontSize="20" 
+                           HorizontalAlignment="Center"
+                           Margin="0,16,0,8"
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                
+                <!-- Description -->
+                <TextBlock Grid.Row="2"
+                           Text="{Binding Description}" 
+                           FontSize="14" 
+                           TextWrapping="Wrap"
+                           HorizontalAlignment="Center"
+                           MaxWidth="700"
+                           TextAlignment="Center"
+                           Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                           LineHeight="24"/>
+                
+                <!-- Build Info -->
+                <TextBlock Grid.Row="3"
+                           Text="{Binding BuildDate, StringFormat='构建日期: {0}'}"
+                           FontSize="12"
+                           HorizontalAlignment="Center"
+                           Margin="0,8,0,0"
+                           Foreground="{DynamicResource TextFillColorDisabledBrush}"/>
+            </Grid>
+            
+            <!-- Footer -->
+            <Border Margin="0,24,0,0" 
+                    Padding="16"
+                    Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}"
+                    CornerRadius="8">
+                <StackPanel Spacing="8" HorizontalAlignment="Center">
+                    <TextBlock Text="💡 提示" 
+                               FontSize="14" 
+                               FontWeight="SemiBold"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="使用快速操作开始您的工作，或从最近项目中继续之前的工作。" 
+                               FontSize="13" 
+                               HorizontalAlignment="Center"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
