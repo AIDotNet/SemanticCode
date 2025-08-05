@@ -41,13 +41,7 @@ jobs:
 
       - name: Build Windows executable
         run: |
-          dotnet publish SemanticCode.Desktop/SemanticCode.Desktop.csproj \
-            -c Release \
-            -r win-x64 \
-            --self-contained true \
-            -p:PublishSingleFile=true \
-            -p:IncludeNativeLibrariesForSelfExtract=true \
-            -o ./publish/win-x64
+          dotnet publish SemanticCode.Desktop/SemanticCode.Desktop.csproj -c Release -r win-x64 --self-contained true -o ./publish/win-x64
 
       - name: Create Windows archive
         run: |
@@ -77,13 +71,7 @@ jobs:
 
       - name: Build Linux executable
         run: |
-          dotnet publish SemanticCode.Desktop/SemanticCode.Desktop.csproj \
-            -c Release \
-            -r linux-x64 \
-            --self-contained true \
-            -p:PublishSingleFile=true \
-            -p:IncludeNativeLibrariesForSelfExtract=true \
-            -o ./publish/linux-x64
+          dotnet publish SemanticCode.Desktop/SemanticCode.Desktop.csproj -c Release -r linux-x64 --self-contained true -o ./publish/linux-x64
 
       - name: Create Linux archive
         run: |
