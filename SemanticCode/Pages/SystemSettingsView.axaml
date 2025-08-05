@@ -23,88 +23,14 @@
                     BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
                     CornerRadius="8"
-                    Padding="16">
-                <StackPanel Spacing="12">
-                    <TextBlock Text="{Binding ThemeLabel}" 
-                               FontWeight="SemiBold"
-                               FontSize="16"/>
-                    <TextBlock Text="选择应用程序主题"
-                               Opacity="0.8"
-                               FontSize="14"/>
-                    <ComboBox ItemsSource="{Binding AvailableThemes}"
-                              SelectedItem="{Binding SelectedTheme}"/>
-                </StackPanel>
-            </Border>
-            
-            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="16">
-                <StackPanel Spacing="12">
-                    <TextBlock Text="{Binding LanguageLabel}" 
-                               FontWeight="SemiBold"
-                               FontSize="16"/>
-                    <TextBlock Text="选择应用程序语言"
-                               Opacity="0.8"
-                               FontSize="14"/>
-                    <ComboBox ItemsSource="{Binding AvailableLanguages}"
-                              SelectedItem="{Binding SelectedLanguage}"/>
-                </StackPanel>
-            </Border>
-            
-            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="16">
-                <Grid ColumnDefinitions="*,Auto">
-                    <StackPanel Grid.Column="0" Spacing="8">
-                        <TextBlock Text="{Binding AutoStartLabel}" 
-                                   FontWeight="SemiBold"
-                                   FontSize="16"/>
-                        <TextBlock Text="开机时自动启动应用程序"
-                                   Opacity="0.8"
-                                   FontSize="14"/>
-                    </StackPanel>
-                    <ToggleSwitch Grid.Column="1" 
-                                  IsChecked="{Binding AutoStart}"
-                                  VerticalAlignment="Center"/>
-                </Grid>
-            </Border>
-            
-            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="16">
-                <Grid ColumnDefinitions="*,Auto">
-                    <StackPanel Grid.Column="0" Spacing="8">
-                        <TextBlock Text="{Binding NotificationLabel}" 
-                                   FontWeight="SemiBold"
-                                   FontSize="16"/>
-                        <TextBlock Text="启用系统通知"
-                                   Opacity="0.8"
-                                   FontSize="14"/>
-                    </StackPanel>
-                    <ToggleSwitch Grid.Column="1" 
-                                  IsChecked="{Binding EnableNotifications}"
-                                  VerticalAlignment="Center"/>
-                </Grid>
-            </Border>
-            
-            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="16">
-                <StackPanel Spacing="12">
+                    Padding="20">
+                <StackPanel Spacing="16">
                     <TextBlock Text="{Binding UpdateLabel}" 
-                               FontWeight="SemiBold"
-                               FontSize="16"/>
+                               FontWeight="Bold"
+                               FontSize="18"/>
                     <TextBlock Text="检查应用程序更新"
-                               Opacity="0.8"
-                               FontSize="14"/>
+                               Opacity="0.7"
+                               FontSize="13"/>
                     <Grid ColumnDefinitions="*,Auto">
                         <TextBlock Grid.Column="0"
                                    Text="{Binding UpdateStatus}"
@@ -119,23 +45,26 @@
                     
                     <!-- Update details when available -->
                     <Border IsVisible="{Binding LatestUpdate.IsNewerVersion}"
-                            Background="{DynamicResource AccentFillColorDefaultBrush}"
-                            CornerRadius="4"
-                            Padding="12"
+                            Background="{DynamicResource SystemAccentColorLight2Brush}"
+                            CornerRadius="8"
+                            Padding="16"
                             Margin="0,8,0,0">
-                        <StackPanel Spacing="8">
-                            <TextBlock Text="{Binding LatestUpdate.Version, StringFormat='新版本: v{0}'}"
-                                       FontWeight="SemiBold"
-                                       Foreground="White"/>
+                        <StackPanel Spacing="12">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="发现新版本"
+                                           FontWeight="SemiBold"
+                                           FontSize="16"/>
+                                <TextBlock Text="{Binding LatestUpdate.Version, StringFormat='版本: v{0}'}"
+                                           Opacity="0.9"/>
+                            </StackPanel>
                             <TextBlock Text="{Binding LatestUpdate.Description}"
-                                       Foreground="White"
                                        TextWrapping="Wrap"
                                        MaxHeight="100"
-                                       IsVisible="{Binding LatestUpdate.Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                       IsVisible="{Binding LatestUpdate.Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       Opacity="0.8"/>
                             <Button Content="查看发布页面"
                                     Background="Transparent"
-                                    BorderBrush="White"
-                                    Foreground="White"
+                                    BorderBrush="{DynamicResource SystemAccentColorLight1Brush}"
                                     HorizontalAlignment="Left"
                                     Margin="0,4,0,0"/>
                         </StackPanel>

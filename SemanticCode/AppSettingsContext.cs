@@ -5,6 +5,9 @@ using SemanticCode.Services;
 namespace SemanticCode;
 
 [JsonSerializable(typeof(ClaudeCodeSettings))]
+[JsonSerializable(typeof(ClaudeCodeProfile))]
+[JsonSerializable(typeof(ClaudeCodeProfileInfo))]
+[JsonSerializable(typeof(ProfileManager))]
 [JsonSerializable(typeof(GitHubRelease))]
 internal partial class AppSettingsContext : JsonSerializerContext
 {

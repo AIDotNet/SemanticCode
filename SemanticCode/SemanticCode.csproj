@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
@@ -35,6 +35,9 @@
       </Compile>
       <Compile Update="Pages\SystemSettingsView.axaml.cs">
         <DependentUpon>SystemSettingsView.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Pages\AgentsManagementView.axaml.cs">
+        <DependentUpon>AgentsManagementView.axaml</DependentUpon>
       </Compile>
     </ItemGroup>
 </Project>

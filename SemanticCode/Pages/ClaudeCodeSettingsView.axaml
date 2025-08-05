@@ -25,6 +25,88 @@
                            HorizontalAlignment="Center"/>
             </StackPanel>
             
+            <!-- Profile Management -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="20">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="配置档案管理" 
+                               FontWeight="Bold"
+                               FontSize="18"/>
+                    
+                    <!-- Current Profile Selection -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="当前配置档案" 
+                                   FontWeight="SemiBold"/>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <ComboBox Grid.Column="0"
+                                      ItemsSource="{Binding Profiles}"
+                                      SelectedItem="{Binding SelectedProfile}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Spacing="4">
+                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding Description}" Opacity="0.7" FontSize="12"/>
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <TextBlock Text="默认" 
+                                                           FontSize="10" 
+                                                           Opacity="0.8"
+                                                           IsVisible="{Binding IsDefault}"/>
+                                                <TextBlock Text="{Binding UpdatedAt, StringFormat='{}{0:yyyy-MM-dd HH:mm}'}" 
+                                                           FontSize="10" 
+                                                           Opacity="0.6"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <Button Grid.Column="1" 
+                                    Content="刷新" 
+                                    Command="{Binding LoadProfilesCommand}"
+                                    Margin="8,0,0,0"/>
+                        </Grid>
+                    </StackPanel>
+                    
+                    <!-- Profile Actions -->
+                    <StackPanel Orientation="Horizontal" 
+                                HorizontalAlignment="Center" 
+                                Spacing="8">
+                        <Button Content="设为默认" 
+                                Command="{Binding SetDefaultProfileCommand}"/>
+                        <Button Content="复制档案" 
+                                Command="{Binding DuplicateProfileCommand}"/>
+                        <Button Content="删除档案" 
+                                Command="{Binding DeleteProfileCommand}"/>
+                    </StackPanel>
+                    
+                    <!-- Create New Profile -->
+                    <Separator Height="1" Margin="0,8,0,8"/>
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="创建新配置档案" 
+                                   FontWeight="SemiBold"/>
+                        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,*">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="档案名称"/>
+                            <TextBox Grid.Row="1" Grid.Column="0" 
+                                     Text="{Binding NewProfileName}"
+                                     Watermark="输入档案名称"/>
+                            
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="档案描述"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" 
+                                     Text="{Binding NewProfileDescription}"
+                                     Watermark="输入档案描述" Margin="8,0,0,0"/>
+                            
+                            <Button Grid.Row="2" Grid.ColumnSpan="2" 
+                                    Content="创建档案" 
+                                    Command="{Binding CreateProfileCommand}"
+                                    HorizontalAlignment="Center"
+                                    Margin="0,8,0,0"/>
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            
             <!-- Action Buttons -->
             <StackPanel Orientation="Horizontal" 
                         HorizontalAlignment="Center" 
@@ -137,7 +219,8 @@
                             <NumericUpDown Value="{Binding MaxTokens}"
                                            Minimum="100"
                                            Maximum="200000"
-                                           Increment="100"/>
+                                           Increment="100"
+                                           FormatString="N0"/>
                         </StackPanel>
                         
                         <!-- Temperature -->
@@ -190,7 +273,8 @@
                                 <NumericUpDown Value="{Binding MaxContextTokens}"
                                                Minimum="1000"
                                                Maximum="1000000"
-                                               Increment="1000"/>
+                                               Increment="1000"
+                                               FormatString="N0"/>
                             </StackPanel>
                             
                             <!-- Memory Path -->
@@ -234,8 +318,12 @@
                                FontWeight="SemiBold"
                                FontSize="16"/>
                     <TextBlock Opacity="0.7" FontSize="13">
-                        <Run Text="配置文件位置: "/>
+                        <Run Text="主配置文件: "/>
                         <Run Text="C:\Users\当前用户\.claude\settings.json" FontFamily="Consolas"/>
+                    </TextBlock>
+                    <TextBlock Opacity="0.7" FontSize="13">
+                        <Run Text="配置档案目录: "/>
+                        <Run Text="C:\Users\当前用户\.claude\profiles\" FontFamily="Consolas"/>
                     </TextBlock>
                     <TextBlock Text="修改配置后请点击'保存配置'按钮以生效。"
                                Opacity="0.7"
