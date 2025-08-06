@@ -41,8 +41,6 @@ jobs:
 
       - name: Setup Inno Setup
         uses: nadeemjazmawe/inno-setup-action-cli@v6.0.5
-        with:
-          iscc-version: "6.2.2"
 
       - name: Restore dependencies
         run: dotnet restore SemanticCode.sln
@@ -57,14 +55,17 @@ jobs:
           # Remove .pdb files if any exist
           if (Test-Path "*.pdb") { Remove-Item "*.pdb" }
 
-      - name: Create Windows installer with Inno Setup
-        env:
-          APP_VERSION: ${{ needs.prepare.outputs.version }}
+      - name: Prepare installer directory
         run: |
           # Create dist directory
           if (!(Test-Path "dist")) { New-Item -ItemType Directory -Path "dist" }
-          # Compile the installer using iscc
-          iscc setup/setup.iss
+
+      - name: Create Windows installer with Inno Setup
+        uses: nadeemjazmawe/inno-setup-action-cli@v6.0.5
+        with:
+          filepath: setup/setup.iss
+        env:
+          APP_VERSION: ${{ needs.prepare.outputs.version }}
 
       - name: Create Windows archive (fallback)
         run: |
