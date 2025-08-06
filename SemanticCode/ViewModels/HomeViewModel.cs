@@ -12,6 +12,8 @@ using Avalonia.Media;
 using System.ComponentModel;
 using System.Net.Http;
 using System.Text;
+using SemanticCode.Services;
+using SemanticCode.Views;
 
 namespace SemanticCode.ViewModels;
 
@@ -28,6 +30,9 @@ public class HomeViewModel : ViewModelBase
     private IBrush _nodeStatusColor = Brushes.Orange;
     private IBrush _gitStatusColor = Brushes.Orange;
     private IBrush _envVarStatusColor = Brushes.Orange;
+    private readonly UpdateService _updateService;
+    private readonly UpdateConfigService _updateConfigService;
+    private bool _hasCheckedForUpdatesThisSession = false;
 
     public string Title { get; } = "Semantic Code";
     public string WelcomeMessage { get; } = "欢迎使用 Semantic Code 一款Claude Code工具。";
@@ -118,6 +123,9 @@ public class HomeViewModel : ViewModelBase
     
     public HomeViewModel()
     {
+        _updateService = new UpdateService();
+        _updateConfigService = new UpdateConfigService();
+        
         NavigateCommand = ReactiveCommand.Create<string>(Navigate);
         OpenProjectCommand = ReactiveCommand.Create<string>(OpenProject);
         RefreshStatusCommand = ReactiveCommand.CreateFromTask(RefreshStatusAsync);
@@ -127,8 +135,12 @@ public class HomeViewModel : ViewModelBase
         InitializeQuickActions();
         InitializeRecentProjects();
         
-        // 启动时检查状态
-        Task.Run(async () => await RefreshStatusAsync());
+        // 启动时检查状态和版本更新（只检查一次）
+        Task.Run(async () => 
+        {
+            await RefreshStatusAsync();
+            await CheckForUpdatesAsync();
+        });
     }
     
     private void InitializeFeatures()
@@ -699,6 +711,62 @@ public class HomeViewModel : ViewModelBase
                 return new CommandResult { Success = false, Error = ex.Message };
             }
         });
+    }
+    
+    private async Task CheckForUpdatesAsync()
+    {
+        // 确保只在首次加载时检查更新，避免重复检查
+        if (_hasCheckedForUpdatesThisSession)
+            return;
+            
+        _hasCheckedForUpdatesThisSession = true;
+        
+        try
+        {
+            var updateInfo = await _updateService.CheckForUpdatesAsync();
+            
+            if (updateInfo != null && updateInfo.IsNewerVersion)
+            {
+                // 检查是否被用户忽略
+                if (!_updateConfigService.IsVersionIgnored(updateInfo.Version))
+                {
+                    // 在UI线程中显示更新对话框
+                    await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(async () =>
+                    {
+                        await ShowUpdateNotification(updateInfo);
+                    });
+                }
+            }
+        }
+        catch (Exception)
+        {
+            // 静默处理更新检查失败
+        }
+    }
+    
+    private async Task ShowUpdateNotification(Models.UpdateInfo updateInfo)
+    {
+        var viewModel = new UpdateNotificationViewModel(_updateService, updateInfo);
+        var dialog = new UpdateNotificationDialog(viewModel);
+        
+        // 设置对话框事件处理
+        viewModel.RemindLaterRequested += (s, e) => dialog.Close();
+        viewModel.IgnoreVersionRequested += (s, e) => 
+        {
+            _updateConfigService.IgnoreVersion(updateInfo.Version);
+            dialog.Close();
+        };
+        viewModel.UpdateCompleted += (s, e) => dialog.Close();
+        
+        // 显示对话框
+        var mainWindow = Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
+            ? desktop.MainWindow
+            : null;
+            
+        if (mainWindow != null)
+        {
+            await dialog.ShowDialog(mainWindow);
+        }
     }
 }
 

@@ -18,7 +18,24 @@ sealed class Program
     public static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
+            .UseSkia()
             .WithInterFont()
+            .With(new Win32PlatformOptions()
+            {
+                RenderingMode =
+                [
+                    Win32RenderingMode.Software
+                ]
+            })
+            .With(new X11PlatformOptions
+            {
+                RenderingMode = [X11RenderingMode.Software]
+            })
             .UseReactiveUI()
+            // 仅在 Debug 模式下启用日志追踪
+#if DEBUG
             .LogToTrace();
+#else
+;
+#endif
 }

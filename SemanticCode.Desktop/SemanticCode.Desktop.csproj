@@ -7,14 +7,43 @@
         <AssemblyTitle>Semantic Code</AssemblyTitle>
         <Product>Semantic Code</Product>
         <AssemblyProduct>Semantic Code</AssemblyProduct>
+        
+        <!-- 内存优化设置 -->
+        <TieredCompilation>false</TieredCompilation>
+        <ReadyToRun>false</ReadyToRun>
+        <ServerGarbageCollection>false</ServerGarbageCollection>
+        <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
+        <RetainVMGarbageCollection>false</RetainVMGarbageCollection>
+        <TieredCompilationQuickJit>false</TieredCompilationQuickJit>
+        <TieredCompilationQuickJitForLoops>false</TieredCompilationQuickJitForLoops>
+        
+        <!-- 减少工作集内存 -->
+        <UseWorkingSetMemory>true</UseWorkingSetMemory>
+        <TrimmerRemoveSymbols>true</TrimmerRemoveSymbols>
+        <DebuggerSupport>false</DebuggerSupport>
+        <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
+        <EventSourceSupport>false</EventSourceSupport>
+        <UseSystemResourceKeys>true</UseSystemResourceKeys>
+        <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+        <IlcOptimizationPreference>Size</IlcOptimizationPreference>
+        <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
     </PropertyGroup>
     
     <PropertyGroup>
         <PublishAot>true</PublishAot>
-        <TrimMode>lite</TrimMode>
+        <TrimMode>full</TrimMode>
         <PublishTrimmed>true</PublishTrimmed>
         <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
-
+        
+        <!-- AOT 内存优化 -->
+        <IlcDisableReflection>true</IlcDisableReflection>
+        <IlcTrimMetadata>true</IlcTrimMetadata>
+        <IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata>
+        <InvariantGlobalization>false</InvariantGlobalization>
+        
+        <!-- 移除调试信息以减少内存 -->
+        <DebugType>none</DebugType>
+        <DebugSymbols>false</DebugSymbols>
     </PropertyGroup>
     
     <PropertyGroup>

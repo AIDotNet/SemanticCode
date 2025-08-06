@@ -1,0 +1,117 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:SemanticCode.ViewModels"
+        mc:Ignorable="d" 
+        x:Class="SemanticCode.Views.UpdateNotificationDialog"
+        x:DataType="vm:UpdateNotificationViewModel"
+        Title="版本更新" 
+        Width="500" 
+        Height="400"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        ShowInTaskbar="False">
+    
+    <Design.DataContext>
+        <vm:UpdateNotificationViewModel/>
+    </Design.DataContext>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+            <TextBlock Text="🚀" FontSize="32" VerticalAlignment="Center" Margin="0,0,12,0"/>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="发现新版本" FontSize="20" FontWeight="Bold"/>
+                <TextBlock Text="{Binding NewVersion, StringFormat='版本 {0} 已发布'}" FontSize="14" Foreground="Gray" Margin="0,4,0,0"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Content -->
+        <ScrollViewer Grid.Row="1" Margin="0,0,0,20">
+            <StackPanel Spacing="16">
+                <!-- Version Info -->
+                <Border Background="LightGray" CornerRadius="8" Padding="16">
+                    <StackPanel>
+                        <TextBlock Text="版本信息" FontWeight="Bold" FontSize="14" Margin="0,0,0,8"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="当前版本:" FontSize="12"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentVersion}" FontSize="12"/>
+                            
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="最新版本:" FontSize="12" Margin="0,4,0,0"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding NewVersion}" FontSize="12" Margin="0,4,0,0" FontWeight="Bold"/>
+                            
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="发布日期:" FontSize="12" Margin="0,4,0,0"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding PublishedDate}" FontSize="12" Margin="0,4,0,0"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Platform Info -->
+                <Border Background="LightBlue" CornerRadius="8" Padding="16" IsVisible="{Binding IsWindowsPlatform}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="✅" FontSize="14" Margin="0,0,8,0"/>
+                            <TextBlock Text="支持自动更新" FontWeight="Bold" FontSize="14"/>
+                        </StackPanel>
+                        <TextBlock Text="当前平台支持自动下载和安装更新" FontSize="12" Margin="0,4,0,0" Foreground="DarkBlue"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="LightYellow" CornerRadius="8" Padding="16" IsVisible="{Binding !IsWindowsPlatform}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="ℹ️" FontSize="14" Margin="0,0,8,0"/>
+                            <TextBlock Text="手动更新" FontWeight="Bold" FontSize="14"/>
+                        </StackPanel>
+                        <TextBlock Text="请手动下载最新版本进行更新" FontSize="12" Margin="0,4,0,0" Foreground="DarkOrange"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Release Notes -->
+                <StackPanel IsVisible="{Binding HasReleaseNotes}">
+                    <TextBlock Text="更新说明" FontWeight="Bold" FontSize="14" Margin="0,0,0,8"/>
+                    <Border Background="White" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Padding="12" MaxHeight="150">
+                        <ScrollViewer>
+                            <TextBlock Text="{Binding ReleaseNotes}" TextWrapping="Wrap" FontSize="12" LineHeight="18"/>
+                        </ScrollViewer>
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Progress Bar -->
+        <ProgressBar Grid.Row="2" 
+                     IsVisible="{Binding IsDownloading}" 
+                     Value="{Binding DownloadProgress}" 
+                     Margin="0,0,0,20"
+                     Height="6"/>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="12">
+            <Button Content="稍后提醒" Command="{Binding RemindLaterCommand}" IsEnabled="{Binding !IsDownloading}"/>
+            <Button Content="忽略此版本" Command="{Binding IgnoreVersionCommand}" IsEnabled="{Binding !IsDownloading}"/>
+            <Button Content="{Binding UpdateButtonText}" 
+                    Classes="accent" 
+                    Command="{Binding UpdateCommand}"
+                    IsEnabled="{Binding !IsDownloading}"/>
+        </StackPanel>
+    </Grid>
+</Window>
