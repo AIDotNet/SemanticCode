@@ -10,6 +10,7 @@
     <Product>SemanticCode</Product>
     <Authors>AIDotNet</Authors>
     <Description>SemanticCode is a cross-platform desktop application for managing and interacting with AI agents, built using Avalonia UI.</Description>
+    
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Avalonia" Version="11.3.3" />
