@@ -12,6 +12,7 @@
 
     <ItemGroup>
         <PackageReference Include="Avalonia"/>
+        <PackageReference Include="Avalonia.Desktop"/>
         <PackageReference Include="Avalonia.Themes.Fluent"/>
         <PackageReference Include="Avalonia.Fonts.Inter"/>
         <PackageReference Include="Avalonia.Diagnostics">
@@ -40,6 +41,9 @@
       </Compile>
       <Compile Update="Pages\AgentHubView.axaml.cs">
         <DependentUpon>AgentHubView.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="App.axaml.cs">
+        <DependentUpon>App.axaml</DependentUpon>
       </Compile>
     </ItemGroup>
 </Project>

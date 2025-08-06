@@ -9,6 +9,7 @@ using Avalonia.Threading;
 using ReactiveUI;
 using SemanticCode.Models;
 using SemanticCode.Services;
+using System.Collections.ObjectModel;
 
 namespace SemanticCode.ViewModels;
 
@@ -177,12 +178,40 @@ public class ClaudeCodeSettingsViewModel : ViewModelBase
 
     // Profile Management
     private List<ClaudeCodeProfileInfo> _profiles = new();
+    private List<ClaudeCodeProfileInfo> _filteredProfiles = new();
+    private string _searchText = string.Empty;
+    private bool _isProfileDropDownOpen = false;
 
     public List<ClaudeCodeProfileInfo> Profiles
     {
         get => _profiles;
         private set => this.RaiseAndSetIfChanged(ref _profiles, value);
     }
+
+    public List<ClaudeCodeProfileInfo> FilteredProfiles
+    {
+        get => _filteredProfiles;
+        private set => this.RaiseAndSetIfChanged(ref _filteredProfiles, value);
+    }
+
+    public string SearchText
+    {
+        get => _searchText;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _searchText, value);
+            FilterProfiles();
+        }
+    }
+
+    public bool IsProfileDropDownOpen
+    {
+        get => _isProfileDropDownOpen;
+        set => this.RaiseAndSetIfChanged(ref _isProfileDropDownOpen, value);
+    }
+
+    public int TotalProfilesCount => Profiles?.Count ?? 0;
+    public int FilteredProfilesCount => FilteredProfiles?.Count ?? 0;
 
     private ClaudeCodeProfileInfo? _selectedProfile;
 
@@ -213,14 +242,6 @@ public class ClaudeCodeSettingsViewModel : ViewModelBase
     {
         get => _newProfileDescription;
         set => this.RaiseAndSetIfChanged(ref _newProfileDescription, value);
-    }
-
-    private bool _isProfileDropDownOpen = false;
-
-    public bool IsProfileDropDownOpen
-    {
-        get => _isProfileDropDownOpen;
-        set => this.RaiseAndSetIfChanged(ref _isProfileDropDownOpen, value);
     }
 
     // Commands
@@ -598,6 +619,30 @@ public class ClaudeCodeSettingsViewModel : ViewModelBase
         {
             StatusMessage = $"复制配置档案失败: {ex.Message}";
         }
+    }
+
+    private void FilterProfiles()
+    {
+        if (Profiles == null)
+        {
+            FilteredProfiles = new List<ClaudeCodeProfileInfo>();
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(SearchText))
+        {
+            FilteredProfiles = new List<ClaudeCodeProfileInfo>(Profiles);
+        }
+        else
+        {
+            var searchTerm = SearchText.ToLowerInvariant();
+            FilteredProfiles = Profiles.Where(p => 
+                p.Name.ToLowerInvariant().Contains(searchTerm) || 
+                p.Description.ToLowerInvariant().Contains(searchTerm)
+            ).ToList();
+        }
+        
+        this.RaisePropertyChanged(nameof(FilteredProfilesCount));
     }
 
     private ClaudeCodeSettings CloneSettings(ClaudeCodeSettings source)

@@ -65,22 +65,118 @@
                            Foreground="{DynamicResource TextFillColorDisabledBrush}"/>
             </Grid>
             
-            <!-- Footer -->
-            <Border Margin="0,24,0,0" 
-                    Padding="16"
-                    Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}"
-                    CornerRadius="8">
-                <StackPanel Spacing="8" HorizontalAlignment="Center">
-                    <TextBlock Text="💡 提示" 
-                               FontSize="14" 
-                               FontWeight="SemiBold"
-                               HorizontalAlignment="Center"/>
-                    <TextBlock Text="使用快速操作开始您的工作，或从最近项目中继续之前的工作。" 
-                               FontSize="13" 
-                               HorizontalAlignment="Center"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+            <!-- Claude Installation Section -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="24">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Claude Code 环境检查" 
+                               FontSize="20" 
+                               FontWeight="SemiBold"/>
+                    
+                    <!-- Installation Status Grid -->
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Claude Code Status -->
+                        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Spacing="12">
+                            <TextBlock Text="🤖" FontSize="16"/>
+                            <TextBlock Text="Claude Code" FontSize="14" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock Grid.Row="0" Grid.Column="1" 
+                                   Text="{Binding ClaudeStatus}" 
+                                   FontSize="12" 
+                                   VerticalAlignment="Center"
+                                   Foreground="{Binding ClaudeStatusColor}"/>
+                        
+                        <!-- Node.js Status -->
+                        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Spacing="12" Margin="0,8,0,0">
+                            <TextBlock Text="🟢" FontSize="16"/>
+                            <TextBlock Text="Node.js (≥18.0)" FontSize="14" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock Grid.Row="1" Grid.Column="1" 
+                                   Text="{Binding NodeStatus}" 
+                                   FontSize="12" 
+                                   VerticalAlignment="Center"
+                                   Foreground="{Binding NodeStatusColor}"
+                                   Margin="0,8,0,0"/>
+                        
+                        <!-- Git Status -->
+                        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Spacing="12" Margin="0,8,0,0">
+                            <TextBlock Text="📂" FontSize="16"/>
+                            <TextBlock Text="Git" FontSize="14" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock Grid.Row="2" Grid.Column="1" 
+                                   Text="{Binding GitStatus}" 
+                                   FontSize="12" 
+                                   VerticalAlignment="Center"
+                                   Foreground="{Binding GitStatusColor}"
+                                   Margin="0,8,0,0"/>
+                        
+                        <!-- Environment Variable Status -->
+                        <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal" Spacing="12" Margin="0,8,0,0">
+                            <TextBlock Text="🔧" FontSize="16"/>
+                            <TextBlock Text="Git Bash" FontSize="14" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock Grid.Row="3" Grid.Column="1" 
+                                   Text="{Binding EnvVarStatus}" 
+                                   FontSize="12" 
+                                   VerticalAlignment="Center"
+                                   Foreground="{Binding EnvVarStatusColor}"
+                                   Margin="0,8,0,0"/>
+                    </Grid>
+                    
+                    <!-- Progress Bar -->
+                    <ProgressBar IsVisible="{Binding IsInstalling}"
+                                 IsIndeterminate="True"
+                                 Height="4"/>
+                    
+                    <!-- Console Output -->
+                    <Border IsVisible="{Binding IsInstalling}"
+                            Background="#0C0C0C"
+                            BorderBrush="#333333"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            Padding="12"
+                            MaxHeight="300">
+                        <ScrollViewer x:Name="ConsoleScrollViewer"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Auto">
+                            <TextBlock Text="{Binding ConsoleOutput}"
+                                       FontFamily="Consolas, 'Courier New', monospace"
+                                       FontSize="12"
+                                       Foreground="#00FF00"
+                                       TextWrapping="Wrap"
+                                       Background="Transparent"/>
+                        </ScrollViewer>
+                    </Border>
+                    
+                    <!-- Action Buttons -->
+                    <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right">
+                        <Button Content="刷新状态" 
+                                Command="{Binding RefreshStatusCommand}"
+                                IsEnabled="{Binding !IsInstalling}"/>
+                        <Button Content="一键安装 Claude Code" 
+                                Classes="accent"
+                                IsVisible="{Binding !IsAllInstalled}"
+                                IsEnabled="{Binding !IsInstalling}"
+                                Command="{Binding InstallAllCommand}"/>
+                    </StackPanel>
                 </StackPanel>
             </Border>
+            
         </StackPanel>
     </ScrollViewer>
 </UserControl>

@@ -12,20 +12,12 @@
         <vm:AgentHubViewModel />
     </Design.DataContext>
     
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        
+    <Grid RowDefinitions="Auto,*">
+
         <!-- Header -->
         <StackPanel Grid.Row="0" Margin="24,24,24,16" Spacing="8">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                
+            <Grid ColumnDefinitions="*,Auto">
+
                 <StackPanel Grid.Column="0" Spacing="4">
                     <TextBlock Text="{Binding HubData.Title}" 
                                FontSize="24" 
@@ -50,13 +42,38 @@
                             <Run Text="安装目录: "/>
                             <Run Text="{Binding AgentsDirectory}"/>
                         </TextBlock>
+                        <TextBlock FontSize="12" 
+                                   Foreground="{DynamicResource AccentFillColorDefaultBrush}"
+                                   Text="{Binding CacheStatus}"
+                                   IsVisible="{Binding CacheStatus, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
                     </StackPanel>
                 </StackPanel>
                 
-                <Button Grid.Column="1" 
-                        Content="刷新"
-                        Command="{Binding RefreshCommand}"
-                        IsEnabled="{Binding !IsLoading}"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                    <Button Content="清除缓存"
+                            Command="{Binding ClearCacheCommand}"
+                            IsEnabled="{Binding !IsLoading}"/>
+                    <Button Content="刷新"
+                            Command="{Binding RefreshCommand}"
+                            IsEnabled="{Binding !IsLoading}"
+                            Classes="accent"/>
+                </StackPanel>
+            </Grid>
+            
+            <!-- Search and Count -->
+            <Grid ColumnDefinitions="*,Auto" 
+                  Margin="0,8,0,0"
+                  IsVisible="{Binding HasData}">
+                <TextBox Grid.Column="0"
+                         Text="{Binding SearchText}"
+                         Watermark="搜索Agent名称或描述..."
+                         MaxWidth="400"
+                         HorizontalAlignment="Left"/>
+                <TextBlock Grid.Column="1"
+                           Text="{Binding CountDisplay}"
+                           FontSize="12"
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                           VerticalAlignment="Center"/>
             </Grid>
         </StackPanel>
         
@@ -106,7 +123,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto" 
                               HorizontalScrollBarVisibility="Disabled"
                               IsVisible="{Binding HasData}">
-                    <ItemsControl ItemsSource="{Binding HubData.Agents}">
+                    <ItemsControl ItemsSource="{Binding FilteredAgents}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <UniformGrid Columns="2" 

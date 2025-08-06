@@ -5,7 +5,9 @@ using Avalonia.Interactivity;
 using FluentAvalonia.UI.Controls;
 using SemanticCode.Pages;
 using SemanticCode.ViewModels;
+using System;
 using System.Diagnostics;
+using System.IO;
 
 namespace SemanticCode.Views;
 
@@ -29,6 +31,12 @@ public partial class MainView : UserControl
             if (tag == "GitHub")
             {
                 OpenGitHub();
+                return;
+            }
+
+            if (tag == "ClaudeFolder")
+            {
+                OpenClaudeFolder();
                 return;
             }
 
@@ -86,6 +94,52 @@ public partial class MainView : UserControl
                 FileName = "https://github.com/AIDotNet/SemanticCode",
                 UseShellExecute = true
             });
+        }
+        catch
+        {
+            // Handle error silently
+        }
+    }
+
+    private void OpenClaudeFolder()
+    {
+        try
+        {
+            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var claudeFolder = Path.Combine(userProfile, ".claude");
+            
+            if (!Directory.Exists(claudeFolder))
+            {
+                Directory.CreateDirectory(claudeFolder);
+            }
+
+            if (OperatingSystem.IsWindows())
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "explorer.exe",
+                    Arguments = claudeFolder,
+                    UseShellExecute = true
+                });
+            }
+            else if (OperatingSystem.IsMacOS())
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "open",
+                    Arguments = claudeFolder,
+                    UseShellExecute = true
+                });
+            }
+            else if (OperatingSystem.IsLinux())
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "xdg-open",
+                    Arguments = claudeFolder,
+                    UseShellExecute = true
+                });
+            }
         }
         catch
         {

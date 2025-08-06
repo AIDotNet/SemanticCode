@@ -45,6 +45,11 @@
         </ui:NavigationView.MenuItems>
         
         <ui:NavigationView.FooterMenuItems>
+            <ui:NavigationViewItem Content=".claude 文件夹" Tag="ClaudeFolder">
+                <ui:NavigationViewItem.IconSource>
+                    <ui:SymbolIconSource Symbol="Folder"/>
+                </ui:NavigationViewItem.IconSource>
+            </ui:NavigationViewItem>
             <ui:NavigationViewItem Content="GitHub" Tag="GitHub">
                 <ui:NavigationViewItem.IconSource>
                     <ui:SymbolIconSource Symbol="Globe"/>

@@ -1,22 +1,16 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:SemanticCode"
+             xmlns:vm="using:SemanticCode.ViewModels"
              xmlns:styling="clr-namespace:FluentAvalonia.Styling;assembly=FluentAvalonia"
              x:Class="SemanticCode.App"
-             RequestedThemeVariant="Default">
-    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+             RequestedThemeVariant="Default"
+             Name="Semantic Code">
 
     <Application.DataTemplates>
         <local:ViewLocator />
     </Application.DataTemplates>
 
-    <Application.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Application.Resources>
-    
     <Application.Styles>
         <FluentTheme />
         <!-- As of preview5, these properties now default to false -->
