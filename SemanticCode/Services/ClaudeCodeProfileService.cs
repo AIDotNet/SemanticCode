@@ -264,6 +264,12 @@ public class ClaudeCodeProfileService
                 return false;
             }
 
+            // Load the profile's settings
+            var profileData = await LoadProfileAsync(profileName);
+            
+            // Copy the profile settings to the main settings.json file
+            await ClaudeCodeSettingsService.SaveSettingsAsync(profileData.Settings);
+
             foreach (var p in manager.Profiles)
             {
                 p.IsDefault = false;
@@ -271,10 +277,8 @@ public class ClaudeCodeProfileService
 
             profile.IsDefault = true;
             
-            if (manager.CurrentProfile == "default")
-            {
-                manager.CurrentProfile = profileName;
-            }
+            // Set this profile as current
+            manager.CurrentProfile = profileName;
 
             await SaveProfileManagerAsync(manager);
             return true;

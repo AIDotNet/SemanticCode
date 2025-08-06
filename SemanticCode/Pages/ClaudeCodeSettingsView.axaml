@@ -3,7 +3,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:SemanticCode.ViewModels"
-             xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SemanticCode.Pages.ClaudeCodeSettingsView"
              x:DataType="vm:ClaudeCodeSettingsViewModel">
@@ -25,7 +24,6 @@
                            HorizontalAlignment="Center"/>
             </StackPanel>
             
-            <!-- Profile Management -->
             <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
@@ -35,18 +33,17 @@
                     <TextBlock Text="配置档案管理" 
                                FontWeight="Bold"
                                FontSize="18"/>
-                    
-                    <!-- Current Profile Selection -->
                     <StackPanel Spacing="8">
                         <TextBlock Text="当前配置档案" 
                                    FontWeight="SemiBold"/>
                         <Grid ColumnDefinitions="*,Auto">
                             <ComboBox Grid.Column="0"
                                       ItemsSource="{Binding Profiles}"
-                                      SelectedItem="{Binding SelectedProfile}">
+                                      SelectedItem="{Binding SelectedProfile}"
+                                      PointerPressed="ComboBox_OnPointerPressed">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <StackPanel Spacing="4">
+                                        <StackPanel Spacing="4" Background="Transparent">
                                             <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
                                             <TextBlock Text="{Binding Description}" Opacity="0.7" FontSize="12"/>
                                             <StackPanel Orientation="Horizontal" Spacing="8">
@@ -81,12 +78,11 @@
                                 Command="{Binding DeleteProfileCommand}"/>
                     </StackPanel>
                     
-                    <!-- Create New Profile -->
                     <Separator Height="1" Margin="0,8,0,8"/>
                     <StackPanel Spacing="12">
                         <TextBlock Text="创建新配置档案" 
                                    FontWeight="SemiBold"/>
-                        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,*">
+                        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,*,*,*">
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="档案名称"/>
                             <TextBox Grid.Row="1" Grid.Column="0" 
                                      Text="{Binding NewProfileName}"
@@ -97,7 +93,7 @@
                                      Text="{Binding NewProfileDescription}"
                                      Watermark="输入档案描述" Margin="8,0,0,0"/>
                             
-                            <Button Grid.Row="2" Grid.ColumnSpan="2" 
+                            <Button Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="2"
                                     Content="创建档案" 
                                     Command="{Binding CreateProfileCommand}"
                                     HorizontalAlignment="Center"
@@ -144,7 +140,7 @@
                                        FontSize="13"/>
                             <TextBox Text="{Binding ApiKey}" 
                                      PasswordChar="*"
-                                     Watermark="sk-ant-xxxxx"/>
+                                     Watermark="sk-ant"/>
                         </StackPanel>
                         
                         <!-- Base URL -->
@@ -154,17 +150,8 @@
                             <TextBlock Text="API 基础 URL 地址"
                                        Opacity="0.7"
                                        FontSize="13"/>
-                            <Grid RowDefinitions="Auto,Auto">
-                                <ComboBox Grid.Row="0"
-                                          ItemsSource="{Binding AvailableBaseUrls}"
-                                          SelectedItem="{Binding BaseUrl}"
-                                          SelectionChanged="BaseUrlComboBox_SelectionChanged"
-                                          Name="BaseUrlComboBox"/>
-                                <TextBox Grid.Row="1" 
-                                         Text="{Binding BaseUrl}"
-                                         Margin="0,4,0,0"
-                                         Watermark="或直接输入自定义URL"/>
-                            </Grid>
+                            <TextBox Text="{Binding BaseUrl}"
+                                     Watermark="输入 API 基础 URL 地址"/>
                         </StackPanel>
                         
                         <!-- Main Model -->
@@ -174,17 +161,8 @@
                             <TextBlock Text="主要会话模型（用于复杂推理）"
                                        Opacity="0.7"
                                        FontSize="13"/>
-                            <Grid RowDefinitions="Auto,Auto">
-                                <ComboBox Grid.Row="0"
-                                          ItemsSource="{Binding AvailableModels}"
-                                          SelectedItem="{Binding SelectedModel}"
-                                          SelectionChanged="ModelComboBox_SelectionChanged"
-                                          Name="ModelComboBox"/>
-                                <TextBox Grid.Row="1" 
-                                         Text="{Binding SelectedModel}"
-                                         Margin="0,4,0,0"
-                                         Watermark="或直接输入自定义模型名称"/>
-                            </Grid>
+                            <TextBox Text="{Binding SelectedModel}"
+                                     Watermark="输入模型名称"/>
                         </StackPanel>
                         
                         <!-- Small Fast Model -->
@@ -194,17 +172,8 @@
                             <TextBlock Text="后台快速模型（用于工具调用和辅助任务）"
                                        Opacity="0.7"
                                        FontSize="13"/>
-                            <Grid RowDefinitions="Auto,Auto">
-                                <ComboBox Grid.Row="0"
-                                          ItemsSource="{Binding AvailableSmallFastModels}"
-                                          SelectedItem="{Binding SelectedSmallFastModel}"
-                                          SelectionChanged="SmallFastModelComboBox_SelectionChanged"
-                                          Name="SmallFastModelComboBox"/>
-                                <TextBox Grid.Row="1" 
-                                         Text="{Binding SelectedSmallFastModel}"
-                                         Margin="0,4,0,0"
-                                         Watermark="或直接输入自定义快速模型名称"/>
-                            </Grid>
+                            <TextBox Text="{Binding SelectedSmallFastModel}"
+                                     Watermark="输入快速模型名称"/>
                         </StackPanel>
                     </StackPanel>
                     
