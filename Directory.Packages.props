@@ -7,13 +7,13 @@
     <InformationalVersion>$(Version)</InformationalVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Avalonia" Version="11.3.2" />
-    <PackageVersion Include="Avalonia.Themes.Fluent" Version="11.3.2" />
-    <PackageVersion Include="Avalonia.Fonts.Inter" Version="11.3.2" />
-    <PackageVersion Include="Avalonia.Diagnostics" Version="11.3.2" />
-    <PackageVersion Include="Avalonia.Desktop" Version="11.3.2" />
-    <PackageVersion Include="Avalonia.Browser" Version="11.3.2" />
-    <PackageVersion Include="Avalonia.ReactiveUI" Version="11.3.2" />
+    <PackageVersion Include="Avalonia" Version="11.3.3" />
+    <PackageVersion Include="Avalonia.Themes.Fluent" Version="11.3.3" />
+    <PackageVersion Include="Avalonia.Fonts.Inter" Version="11.3.3" />
+    <PackageVersion Include="Avalonia.Diagnostics" Version="11.3.3" />
+    <PackageVersion Include="Avalonia.Desktop" Version="11.3.3" />
+    <PackageVersion Include="Avalonia.Browser" Version="11.3.3" />
+    <PackageVersion Include="Avalonia.ReactiveUI" Version="11.3.3" />
     <PackageVersion Include="FluentAvaloniaUI" Version="2.4.0" />
   </ItemGroup>
 </Project>

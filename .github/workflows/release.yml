@@ -39,8 +39,11 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Setup Inno Setup
-        uses: nadeemjazmawe/inno-setup-action-cli@v6.0.5
+      - name: Install Inno Setup via Chocolatey
+        run: |
+          choco install innosetup -y
+          # Add to path for current session
+          $env:PATH += ";C:\Program Files (x86)\Inno Setup 6"
 
       - name: Restore dependencies
         run: dotnet restore SemanticCode.sln
@@ -55,17 +58,40 @@ jobs:
           # Remove .pdb files if any exist
           if (Test-Path "*.pdb") { Remove-Item "*.pdb" }
 
-      - name: Prepare installer directory
+      - name: Create Windows installer with Inno Setup
+        env:
+          APP_VERSION: ${{ needs.prepare.outputs.version }}
         run: |
           # Create dist directory
           if (!(Test-Path "dist")) { New-Item -ItemType Directory -Path "dist" }
-
-      - name: Create Windows installer with Inno Setup
-        uses: nadeemjazmawe/inno-setup-action-cli@v6.0.5
-        with:
-          filepath: setup/setup.iss
-        env:
-          APP_VERSION: ${{ needs.prepare.outputs.version }}
+          # Find iscc.exe and run it
+          $isccPath = @(
+            "C:\Program Files (x86)\Inno Setup 6\iscc.exe",
+            "C:\Program Files\Inno Setup 6\iscc.exe",
+            "C:\tools\InnoSetup\iscc.exe"
+          ) | Where-Object { Test-Path $_ } | Select-Object -First 1
+          
+          if (-not $isccPath) {
+            # Search in chocolatey installation paths
+            $chocoPath = Get-ChildItem -Path "C:\ProgramData\chocolatey" -Recurse -Name "iscc.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($chocoPath) {
+              $isccPath = "C:\ProgramData\chocolatey\$chocoPath"
+            }
+          }
+          
+          if ($isccPath) {
+            Write-Host "Using ISCC at: $isccPath"
+            & $isccPath setup/setup.iss
+          } else {
+            Write-Host "ISCC not found in standard locations, trying PATH"
+            # Try direct command
+            try {
+              iscc setup/setup.iss
+            } catch {
+              Write-Error "Failed to run iscc: $_"
+              exit 1
+            }
+          }
 
       - name: Create Windows archive (fallback)
         run: |
