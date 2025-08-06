@@ -39,6 +39,11 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      - name: Setup Inno Setup
+        uses: nadeemjazmawe/inno-setup-action-cli@v6.0.5
+        with:
+          iscc-version: "6.2.2"
+
       - name: Restore dependencies
         run: dotnet restore SemanticCode.sln
 
@@ -46,14 +51,33 @@ jobs:
         run: |
           dotnet publish SemanticCode.Desktop/SemanticCode.Desktop.csproj -c Release -r win-x64 --self-contained true -o ./publish/win-x64 -p:DebugType=None -p:DebugSymbols=false
 
-      - name: Remove debug files and create Windows archive
+      - name: Remove debug files
         run: |
           cd publish/win-x64
           # Remove .pdb files if any exist
           if (Test-Path "*.pdb") { Remove-Item "*.pdb" }
+
+      - name: Create Windows installer with Inno Setup
+        env:
+          APP_VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          # Create dist directory
+          if (!(Test-Path "dist")) { New-Item -ItemType Directory -Path "dist" }
+          # Compile the installer using iscc
+          iscc setup/setup.iss
+
+      - name: Create Windows archive (fallback)
+        run: |
+          cd publish/win-x64
           7z a ../../SemanticCode-${{ needs.prepare.outputs.version }}-win-x64.zip *
 
-      - name: Upload Windows artifact
+      - name: Upload Windows installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: dist/SemanticCode-Setup-${{ needs.prepare.outputs.version }}-win-x64.exe
+
+      - name: Upload Windows archive
         uses: actions/upload-artifact@v4
         with:
           name: windows-build
@@ -96,7 +120,12 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
-      - name: Download Windows artifact
+      - name: Download Windows installer
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-installer
+
+      - name: Download Windows archive
         uses: actions/download-artifact@v4
         with:
           name: windows-build
@@ -114,5 +143,6 @@ jobs:
           draft: false
           prerelease: false
           files: |
+            SemanticCode-Setup-${{ needs.prepare.outputs.version }}-win-x64.exe
             SemanticCode-${{ needs.prepare.outputs.version }}-win-x64.zip
             SemanticCode-${{ needs.prepare.outputs.version }}-linux-x64.tar.gz
