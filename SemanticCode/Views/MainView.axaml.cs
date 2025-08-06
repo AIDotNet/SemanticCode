@@ -76,6 +76,10 @@ public partial class MainView : UserControl
                 viewModel = new SystemSettingsViewModel();
                 page = new SystemSettingsView();
                 break;
+            case "McpManagement":
+                viewModel = new McpManagementViewModel();
+                page = new McpManagementView();
+                break;
         }
 
         if (page != null && viewModel != null)
