@@ -9,6 +9,7 @@ namespace SemanticCode;
 [JsonSerializable(typeof(ClaudeCodeProfileInfo))]
 [JsonSerializable(typeof(ProfileManager))]
 [JsonSerializable(typeof(GitHubRelease))]
+[JsonSerializable(typeof(AgentHubResponse))]
 internal partial class AppSettingsContext : JsonSerializerContext
 {
 }

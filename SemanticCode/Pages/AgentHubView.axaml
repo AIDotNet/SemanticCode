@@ -1,0 +1,216 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:SemanticCode.ViewModels"
+             xmlns:models="clr-namespace:SemanticCode.Models"
+             xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SemanticCode.Pages.AgentHubView"
+             x:DataType="vm:AgentHubViewModel">
+    <Design.DataContext>
+        <vm:AgentHubViewModel />
+    </Design.DataContext>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="24,24,24,16" Spacing="8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0" Spacing="4">
+                    <TextBlock Text="{Binding HubData.Title}" 
+                               FontSize="24" 
+                               FontWeight="Bold"/>
+                    <TextBlock Text="{Binding HubData.Description}" 
+                               FontSize="14" 
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                               TextWrapping="Wrap"/>
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <TextBlock FontSize="12" 
+                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}">
+                            <Run Text="版本: "/>
+                            <Run Text="{Binding HubData.Version}"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" 
+                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}">
+                            <Run Text="更新时间: "/>
+                            <Run Text="{Binding HubData.LastUpdated}"/>
+                        </TextBlock>
+                        <TextBlock FontSize="12" 
+                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}">
+                            <Run Text="安装目录: "/>
+                            <Run Text="{Binding AgentsDirectory}"/>
+                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+                
+                <Button Grid.Column="1" 
+                        Content="刷新"
+                        Command="{Binding RefreshCommand}"
+                        IsEnabled="{Binding !IsLoading}"/>
+            </Grid>
+        </StackPanel>
+        
+        <!-- Content -->
+        <Border Grid.Row="1" 
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                CornerRadius="8"
+                Margin="24,0,24,24"
+                Padding="16">
+            <Grid>
+                <!-- Loading -->
+                <StackPanel HorizontalAlignment="Center" 
+                            VerticalAlignment="Center"
+                            Spacing="16"
+                            IsVisible="{Binding IsLoading}">
+                    <ui:ProgressRing IsActive="{Binding IsLoading}" 
+                                     Width="48" 
+                                     Height="48"/>
+                    <TextBlock Text="正在加载Agent Hub数据..."
+                               FontSize="14"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+                
+                <!-- Error -->
+                <StackPanel HorizontalAlignment="Center" 
+                            VerticalAlignment="Center"
+                            Spacing="16"
+                            IsVisible="{Binding HasError}">
+                    <TextBlock Text="❌" 
+                               FontSize="48"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="无法加载Agent Hub数据"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="请检查网络连接或稍后重试"
+                               FontSize="14"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                               HorizontalAlignment="Center"/>
+                    <Button Content="重试" 
+                            Command="{Binding RefreshCommand}"
+                            HorizontalAlignment="Center"/>
+                </StackPanel>
+                
+                <!-- Agents Grid -->
+                <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                              HorizontalScrollBarVisibility="Disabled"
+                              IsVisible="{Binding HasData}">
+                    <ItemsControl ItemsSource="{Binding HubData.Agents}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="2" 
+                                           HorizontalAlignment="Stretch"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:AgentHubItem">
+                                <Border Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}"
+                                        CornerRadius="8"
+                                        Padding="16"
+                                        Margin="0,0,8,8">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        
+                                        <!-- Header -->
+                                        <Grid Grid.Row="0" Margin="0,0,0,12">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <StackPanel Grid.Column="0" Spacing="4">
+                                                <TextBlock Text="{Binding Name}" 
+                                                           FontSize="16" 
+                                                           FontWeight="SemiBold"
+                                                           TextWrapping="Wrap"/>
+                                                <TextBlock Text="{Binding LastUpdated}" 
+                                                           FontSize="11" 
+                                                           Foreground="{DynamicResource TextFillColorTertiaryBrush}"/>
+                                            </StackPanel>
+                                            
+                                            <!-- Color indicator -->
+                                            <Border Grid.Column="1"
+                                                    Width="12"
+                                                    Height="12"
+                                                    CornerRadius="6"
+                                                    Background="{Binding Color}"/>
+                                        </Grid>
+                                        
+                                        <!-- Description -->
+                                        <TextBlock Grid.Row="1" 
+                                                   Text="{Binding Description}" 
+                                                   FontSize="13" 
+                                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                   TextWrapping="Wrap"
+                                                   Margin="0,0,0,12"/>
+                                        
+                                        <!-- Tools -->
+                                        <ItemsControl Grid.Row="2" 
+                                                      ItemsSource="{Binding Tools}"
+                                                      Margin="0,0,0,12">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel Orientation="Horizontal"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="{DynamicResource AccentFillColorSecondaryBrush}"
+                                                            CornerRadius="3"
+                                                            Padding="4,1"
+                                                            Margin="0,0,3,3">
+                                                        <TextBlock Text="{Binding}"
+                                                                   FontSize="10"
+                                                                   Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"/>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        
+                                        <!-- Action Button -->
+                                        <Grid Grid.Row="3">
+                                            <Button Content="添加到本地"
+                                                    Command="{Binding $parent[UserControl].DataContext.InstallAgentCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    HorizontalAlignment="Stretch"
+                                                    Classes="accent"
+                                                    IsVisible="{Binding !IsInstalled}"/>
+                                            
+                                            <Border Background="{DynamicResource SystemFillColorSuccessBrush}"
+                                                    CornerRadius="4"
+                                                    Padding="8,6"
+                                                    HorizontalAlignment="Stretch"
+                                                    IsVisible="{Binding IsInstalled}">
+                                                <TextBlock Text="✓ 已安装"
+                                                           FontSize="13"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="White"
+                                                           HorizontalAlignment="Center"/>
+                                            </Border>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

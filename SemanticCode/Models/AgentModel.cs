@@ -19,6 +19,7 @@ public class AgentModel
     public bool IsEnabled { get; set; } = true;
     public Dictionary<string, string> FrontMatter { get; set; } = new();
     public Dictionary<string, string> Configuration { get; set; } = new();
+    public string[] Tools { get; set; } = [];
 
     // 从 AgentFileParser.AgentInfo 转换
     public static AgentModel FromAgentInfo(Services.AgentFileParser.AgentInfo agentInfo)
@@ -34,7 +35,8 @@ public class AgentModel
             FrontMatter = agentInfo.FrontMatter,
             Status = "活跃",
             Type = "通用",
-            IsEnabled = true
+            IsEnabled = true,
+            Tools = agentInfo.Tools
         };
     }
 
@@ -49,7 +51,8 @@ public class AgentModel
             FileName = FileName,
             FilePath = FilePath,
             Content = Content,
-            FrontMatter = FrontMatter
+            FrontMatter = FrontMatter,
+            Tools = Tools
         };
     }
 }

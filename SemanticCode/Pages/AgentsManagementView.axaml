@@ -11,228 +11,271 @@
     <Design.DataContext>
         <vm:AgentsManagementViewModel />
     </Design.DataContext>
-    
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
+
         <!-- Header -->
         <StackPanel Grid.Row="0" Margin="24,24,24,16" Spacing="8">
-            <TextBlock Text="Agents管理" 
-                       FontSize="24" 
-                       FontWeight="Bold"/>
-            <TextBlock Text="管理和配置您的AI助手" 
-                       FontSize="14" 
-                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+            <TextBlock Text="Agents管理"
+                       FontSize="24"
+                       FontWeight="Bold" />
+            <TextBlock Text="管理和配置您的AI助手"
+                       FontSize="14"
+                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
         </StackPanel>
-        
+
         <!-- Main Content -->
         <Grid Grid.Row="1" Margin="24,0,24,24">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="300" />
             </Grid.ColumnDefinitions>
-            
+
             <!-- Agents List -->
-            <Border Grid.Column="0" 
+            <Border Grid.Column="0"
                     Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
                     CornerRadius="8"
                     Padding="16">
-                <StackPanel Spacing="16">
+                <Grid
+                    RowDefinitions="Auto, *"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        
+
                         <StackPanel Grid.Column="0" Spacing="4">
-                            <TextBlock Text="可用Agents" 
-                                       FontSize="18" 
-                                       FontWeight="SemiBold"/>
-                            <TextBlock Text="{Binding AgentsDirectoryPath}" 
-                                       FontSize="12" 
+                            <TextBlock Text="可用Agents"
+                                       FontSize="18"
+                                       FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding AgentsDirectoryPath}"
+                                       FontSize="12"
                                        Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                                       TextWrapping="Wrap"/>
+                                       TextWrapping="Wrap" />
                         </StackPanel>
-                        
-                        <Button Grid.Column="1" 
+
+                        <Button Grid.Column="1"
                                 Content="刷新"
                                 Command="{Binding RefreshCommand}"
-                                Margin="0,0,8,0"/>
+                                Margin="0,0,8,0" />
                     </Grid>
-                    
-                    <ListBox ItemsSource="{Binding Agents}"
+
+                    <ListBox Grid.Row="1" ItemsSource="{Binding Agents}"
                              SelectedItem="{Binding SelectedAgent}"
-                             HorizontalAlignment="Stretch"
-                             Height="300">
+                             HorizontalAlignment="Stretch">
                         <ListBox.ItemTemplate>
                             <DataTemplate x:DataType="models:AgentModel">
                                 <Grid Margin="0,8,0,8">
                                     <Grid.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem Header="用编辑器打开" 
-                                                      
+                                            <MenuItem Header="用编辑器打开"
+
                                                       Command="{Binding $parent[UserControl].DataContext.EditAgentInEditorCommand}"
-                                                      CommandParameter="{Binding}"/>
-                                            <MenuItem Header="删除" 
+                                                      CommandParameter="{Binding}" />
+                                            <MenuItem Header="删除"
                                                       Command="{Binding $parent[UserControl].DataContext.DeleteAgentCommand}"
-                                                      CommandParameter="{Binding}"/>
+                                                      CommandParameter="{Binding}" />
                                         </ContextMenu>
                                     </Grid.ContextMenu>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    
-                                    <TextBlock Grid.Row="0" 
-                                               Text="{Binding Name}" 
-                                               FontSize="16" 
-                                               FontWeight="SemiBold"/>
-                                    
-                                    <TextBlock Grid.Row="1" 
-                                               Text="{Binding Description}" 
-                                               FontSize="12" 
+
+                                    <TextBlock Grid.Row="0"
+                                               Text="{Binding Name}"
+                                               FontSize="16"
+                                               FontWeight="SemiBold" />
+
+                                    <TextBlock Grid.Row="1"
+                                               Text="{Binding Description}"
+                                               FontSize="12"
                                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                               TextWrapping="Wrap"/>
+                                               TextWrapping="Wrap" />
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                </StackPanel>
+                </Grid>
             </Border>
-            
+
             <!-- Agent Details -->
-            <Border Grid.Column="1" 
+            <Border Grid.Column="1"
                     Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}"
                     CornerRadius="8"
                     Padding="16"
                     Margin="16,0,0,0">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                     <StackPanel Spacing="16">
-                    <TextBlock Text="Agent详情" 
-                               FontSize="18" 
-                               FontWeight="SemiBold"/>
-                    
-                    <ContentControl Content="{Binding SelectedAgent}">
-                        <ContentControl.ContentTemplate>
-                            <DataTemplate x:DataType="models:AgentModel">
-                                <StackPanel Spacing="12">
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                        </Grid.RowDefinitions>
-                                        
-                                        <TextBlock Grid.Row="0" 
-                                                   Text="名称" 
-                                                   FontSize="12" 
-                                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                                        
-                                        <TextBlock Grid.Row="1" 
-                                                   Text="{Binding Name}" 
-                                                   FontSize="14" 
-                                                   FontWeight="SemiBold"/>
-                                    </Grid>
-                                    
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                        </Grid.RowDefinitions>
-                                        
-                                        <TextBlock Grid.Row="0" 
-                                                   Text="描述" 
-                                                   FontSize="12" 
-                                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                                        
-                                        <TextBlock Grid.Row="1" 
-                                                   Text="{Binding Description}" 
-                                                   FontSize="14" 
-                                                   TextWrapping="Wrap"/>
-                                    </Grid>
-                                    
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                        </Grid.RowDefinitions>
-                                        
-                                        <TextBlock Grid.Row="0" 
-                                                   Text="状态" 
-                                                   FontSize="12" 
-                                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                                        
-                                        <TextBlock Grid.Row="1" 
-                                                   Text="{Binding Status}" 
-                                                   FontSize="14" 
-                                                   FontWeight="SemiBold"/>
-                                    </Grid>
-                                    
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                        </Grid.RowDefinitions>
-                                        
-                                        <TextBlock Grid.Row="0" 
-                                                   Text="类型" 
-                                                   FontSize="12" 
-                                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                                        
-                                        <TextBlock Grid.Row="1" 
-                                                   Text="{Binding Type}" 
-                                                   FontSize="14"/>
-                                    </Grid>
-                                    
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                        </Grid.RowDefinitions>
-                                        
-                                        <TextBlock Grid.Row="0" 
-                                                   Text="颜色" 
-                                                   FontSize="12" 
-                                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                                        
-                                        <TextBlock Grid.Row="1" 
-                                                   Text="{Binding Color}" 
-                                                   FontSize="14"/>
-                                    </Grid>
-                                    
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                        </Grid.RowDefinitions>
-                                        
-                                        <TextBlock Grid.Row="0" 
-                                                   Text="文件名" 
-                                                   FontSize="12" 
-                                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                                        
-                                        <TextBlock Grid.Row="1" 
-                                                   Text="{Binding FileName}" 
-                                                   FontSize="14"
-                                                   TextWrapping="Wrap"/>
-                                    </Grid>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ContentControl.ContentTemplate>
-                    </ContentControl>
-                    
-                    <!-- Empty state -->
-                    <TextBlock Text="选择一个Agent查看详情" 
-                               FontSize="14" 
-                               Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
-                               IsVisible="{Binding SelectedAgent, Converter={x:Static ObjectConverters.IsNull}}"/>
-                </StackPanel>
+                        <TextBlock Text="Agent详情"
+                                   FontSize="18"
+                                   FontWeight="SemiBold" />
+
+                        <ContentControl Content="{Binding SelectedAgent}">
+                            <ContentControl.ContentTemplate>
+                                <DataTemplate x:DataType="models:AgentModel">
+                                    <StackPanel Spacing="12">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Row="0"
+                                                       Text="名称"
+                                                       FontSize="12"
+                                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+                                            <TextBlock Grid.Row="1"
+                                                       Text="{Binding Name}"
+                                                       FontSize="14"
+                                                       FontWeight="SemiBold" />
+                                        </Grid>
+
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Row="0"
+                                                       Text="描述"
+                                                       FontSize="12"
+                                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+                                            <TextBlock Grid.Row="1"
+                                                       Text="{Binding Description}"
+                                                       FontSize="14"
+                                                       TextWrapping="Wrap" />
+                                        </Grid>
+
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Row="0"
+                                                       Text="状态"
+                                                       FontSize="12"
+                                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+                                            <TextBlock Grid.Row="1"
+                                                       Text="{Binding Status}"
+                                                       FontSize="14"
+                                                       FontWeight="SemiBold" />
+                                        </Grid>
+
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Row="0"
+                                                       Text="类型"
+                                                       FontSize="12"
+                                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+                                            <TextBlock Grid.Row="1"
+                                                       Text="{Binding Type}"
+                                                       FontSize="14" />
+                                        </Grid>
+
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Row="0"
+                                                       Text="颜色"
+                                                       FontSize="12"
+                                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+                                            <TextBlock Grid.Row="1"
+                                                       Text="{Binding Color}"
+                                                       FontSize="14" />
+                                        </Grid>
+
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Row="0"
+                                                       Text="文件名"
+                                                       FontSize="12"
+                                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+                                            <TextBlock Grid.Row="1"
+                                                       Text="{Binding FileName}"
+                                                       FontSize="14"
+                                                       TextWrapping="Wrap" />
+                                        </Grid>
+
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Row="0"
+                                                       Text="可用工具"
+                                                       FontSize="12"
+                                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+                                            <ItemsControl Grid.Row="1"
+                                                          ItemsSource="{Binding Tools}"
+                                                          Margin="0,4,0,0">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel Orientation="Horizontal" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border
+                                                            Background="{DynamicResource AccentFillColorSecondaryBrush}"
+                                                            CornerRadius="4"
+                                                            Padding="6,2"
+                                                            Margin="0,0,4,4">
+                                                            <TextBlock Text="{Binding}"
+                                                                       FontSize="11"
+                                                                       Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" />
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+
+                                            <!-- Show message when no tools -->
+                                            <TextBlock Grid.Row="1"
+                                                       Text="全部工具（默认）"
+                                                       FontSize="12"
+                                                       Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                                        </Grid>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ContentControl.ContentTemplate>
+                        </ContentControl>
+
+                        <!-- Empty state -->
+                        <TextBlock Text="选择一个Agent查看详情"
+                                   FontSize="14"
+                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   IsVisible="{Binding SelectedAgent, Converter={x:Static ObjectConverters.IsNull}}" />
+                    </StackPanel>
                 </ScrollViewer>
             </Border>
         </Grid>

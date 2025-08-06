@@ -60,6 +60,10 @@ public partial class MainView : UserControl
                 viewModel = new AgentsManagementViewModel();
                 page = new AgentsManagementView();
                 break;
+            case "AgentHub":
+                viewModel = new AgentHubViewModel();
+                page = new AgentHubView();
+                break;
             case "SystemSettings":
                 viewModel = new SystemSettingsViewModel();
                 page = new SystemSettingsView();

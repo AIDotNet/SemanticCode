@@ -10,6 +10,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Threading;
 using ReactiveUI;
 using SemanticCode.Models;
 using SemanticCode.Services;
@@ -48,6 +49,9 @@ public class AgentsManagementViewModel : ViewModelBase, IDisposable
         DeleteAgentCommand = ReactiveCommand.Create<AgentModel>(DeleteAgent);
         RefreshCommand = ReactiveCommand.Create(LoadAgents);
         
+        // Subscribe to agent installation notifications
+        AgentNotificationService.Instance.AgentInstalled += OnAgentInstalled;
+        
         LoadAgents();
         SetupFileWatcher();
     }
@@ -59,11 +63,15 @@ public class AgentsManagementViewModel : ViewModelBase, IDisposable
             var agentInfos = _directoryService.LoadAllAgents();
             var agentModels = agentInfos.Select(AgentModel.FromAgentInfo).ToList();
             
-            Agents.Clear();
-            foreach (var agent in agentModels)
+            // Ensure UI updates happen on UI thread
+            Dispatcher.UIThread.Invoke(() =>
             {
-                Agents.Add(agent);
-            }
+                Agents.Clear();
+                foreach (var agent in agentModels)
+                {
+                    Agents.Add(agent);
+                }
+            });
             
             System.Diagnostics.Debug.WriteLine($"Loaded {Agents.Count} agents from {AgentsDirectoryPath}");
         }
@@ -310,8 +318,17 @@ public class AgentsManagementViewModel : ViewModelBase, IDisposable
         }, TaskScheduler.FromCurrentSynchronizationContext());
     }
     
+    private void OnAgentInstalled(object? sender, EventArgs e)
+    {
+        // Refresh the agents list when a new agent is installed
+        LoadAgents();
+    }
+    
     public void Dispose()
     {
+        // Unsubscribe from notifications
+        AgentNotificationService.Instance.AgentInstalled -= OnAgentInstalled;
+        
         if (_fileWatcher != null)
         {
             _fileWatcher.Changed -= OnFileChanged;

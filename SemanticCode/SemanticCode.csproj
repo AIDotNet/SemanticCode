@@ -38,5 +38,8 @@
       <Compile Update="Pages\AgentsManagementView.axaml.cs">
         <DependentUpon>AgentsManagementView.axaml</DependentUpon>
       </Compile>
+      <Compile Update="Pages\AgentHubView.axaml.cs">
+        <DependentUpon>AgentHubView.axaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 </Project>

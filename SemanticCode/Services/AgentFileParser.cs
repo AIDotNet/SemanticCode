@@ -18,6 +18,8 @@ public class AgentFileParser
         public string Content { get; set; } = string.Empty;
         public string PreContent { get; set; } = string.Empty; // 前置内容（第一个---之前）
         public string MainContent { get; set; } = string.Empty; // 主要内容（第二个---之后）
+
+        public string[] Tools { get; set; } = [];
         public Dictionary<string, string> FrontMatter { get; set; } = new();
     }
 
@@ -27,11 +29,15 @@ public class AgentFileParser
         {
             var content = File.ReadAllText(filePath);
             var parsedData = ExtractFrontMatter(content);
-            
+
             if (!parsedData.ContainsKey("name"))
             {
                 return null;
             }
+            
+            var tools = parsedData.ContainsKey("tools") 
+                ? parsedData["tools"].Split([',', ';'], StringSplitOptions.RemoveEmptyEntries)
+                : [];
 
             var agentInfo = new AgentInfo
             {
@@ -40,10 +46,12 @@ public class AgentFileParser
                 Color = parsedData.ContainsKey("color") ? parsedData["color"] : "default",
                 FileName = Path.GetFileName(filePath),
                 FilePath = filePath,
+                Tools = tools,
                 Content = content,
                 PreContent = parsedData.ContainsKey("_precontent") ? parsedData["_precontent"] : string.Empty,
                 MainContent = parsedData.ContainsKey("_maincontent") ? parsedData["_maincontent"] : string.Empty,
-                FrontMatter = parsedData.Where(kvp => !kvp.Key.StartsWith("_")).ToDictionary(kvp => kvp.Key, kvp => kvp.Value)
+                FrontMatter = parsedData.Where(kvp => !kvp.Key.StartsWith("_"))
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value)
             };
 
             return agentInfo;
@@ -58,38 +66,38 @@ public class AgentFileParser
     private Dictionary<string, string> ExtractFrontMatter(string content)
     {
         var result = new Dictionary<string, string>();
-        
+
         // 查找第一个 --- 的位置
         var firstDashIndex = content.IndexOf("---");
         if (firstDashIndex == -1) return result;
-        
+
         // 查找第二个 --- 的位置（从第一个之后开始）
         var secondDashIndex = content.IndexOf("---", firstDashIndex + 3);
         if (secondDashIndex == -1) return result;
-        
+
         // 提取前置内容（第一个---之前）
         var preContent = content.Substring(0, firstDashIndex).Trim();
         if (!string.IsNullOrEmpty(preContent))
         {
             result["_precontent"] = preContent;
         }
-        
+
         // 提取 front matter 内容（两个---之间）
         var frontMatterStart = firstDashIndex + 3;
         var frontMatterLength = secondDashIndex - frontMatterStart;
         var frontMatterText = content.Substring(frontMatterStart, frontMatterLength).Trim();
-        
+
         // 解析 front matter
         var lines = frontMatterText.Split('\n');
         string currentKey = null;
         var currentValue = new List<string>();
-        
+
         foreach (var line in lines)
         {
             var trimmedLine = line.Trim();
             if (string.IsNullOrWhiteSpace(trimmedLine))
                 continue;
-            
+
             // 检查是否是新的 key: value 行
             var colonIndex = trimmedLine.IndexOf(':');
             if (colonIndex > 0 && !trimmedLine.StartsWith(" "))
@@ -100,17 +108,17 @@ public class AgentFileParser
                     result[currentKey] = string.Join("\n", currentValue).Trim();
                     currentValue.Clear();
                 }
-                
+
                 // 开始新的键值对
                 currentKey = trimmedLine.Substring(0, colonIndex).Trim();
                 var value = trimmedLine.Substring(colonIndex + 1).Trim();
-                
+
                 // 去除值周围的引号
                 if (value.StartsWith("\"") && value.EndsWith("\""))
                 {
                     value = value.Substring(1, value.Length - 2);
                 }
-                
+
                 if (!string.IsNullOrEmpty(value))
                 {
                     currentValue.Add(value);
@@ -122,13 +130,13 @@ public class AgentFileParser
                 currentValue.Add(trimmedLine);
             }
         }
-        
+
         // 保存最后一个键值对
         if (currentKey != null)
         {
             result[currentKey] = string.Join("\n", currentValue).Trim();
         }
-        
+
         // 提取主要内容（第二个---之后）
         var mainContentStart = secondDashIndex + 3;
         if (mainContentStart < content.Length)
@@ -139,7 +147,7 @@ public class AgentFileParser
                 result["_maincontent"] = mainContent;
             }
         }
-        
+
         return result;
     }
 
@@ -148,19 +156,19 @@ public class AgentFileParser
         try
         {
             var contentParts = new List<string>();
-            
+
             // 添加前置内容（如果有）
             if (!string.IsNullOrEmpty(agentInfo.PreContent))
             {
                 contentParts.Add(agentInfo.PreContent);
             }
-            
+
             // 添加 front matter
             contentParts.Add("---");
             contentParts.Add($"name: {agentInfo.Name}");
             contentParts.Add($"description: {agentInfo.Description}");
             contentParts.Add($"color: {agentInfo.Color}");
-            
+
             // 添加其他 front matter 属性
             foreach (var kvp in agentInfo.FrontMatter)
             {
@@ -169,16 +177,16 @@ public class AgentFileParser
                     contentParts.Add($"{kvp.Key}: {kvp.Value}");
                 }
             }
-            
+
             contentParts.Add("---");
-            
+
             // 添加主要内容（如果有）
             if (!string.IsNullOrEmpty(agentInfo.MainContent))
             {
                 contentParts.Add("");
                 contentParts.Add(agentInfo.MainContent);
             }
-            
+
             File.WriteAllText(agentInfo.FilePath, string.Join("\n", contentParts));
             return true;
         }
@@ -198,6 +206,7 @@ public class AgentFileParser
                 File.Delete(filePath);
                 return true;
             }
+
             return false;
         }
         catch (Exception ex)
