@@ -71,6 +71,48 @@
                     </Border>
                 </StackPanel>
             </Border>
+
+            <!-- 作者信息和技术交流群 -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="20">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="{Binding AboutLabel}" 
+                               FontWeight="Bold"
+                               FontSize="18"/>
+                    
+                    <!-- 作者信息 -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="{Binding AuthorLabel}"
+                                   FontWeight="SemiBold"
+                                   FontSize="14"
+                                   Opacity="0.8"/>
+                        <TextBlock Text="{Binding AuthorInfo}"
+                                   FontSize="14"
+                                   Margin="16,0,0,0"/>
+                    </StackPanel>
+                    
+                    <!-- 技术交流群 -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="{Binding TechGroupLabel}"
+                                   FontWeight="SemiBold"
+                                   FontSize="14"
+                                   Opacity="0.8"/>
+                        <Border Background="{DynamicResource SystemAccentColorLight3Brush}"
+                                CornerRadius="6"
+                                Padding="12,8"
+                                Margin="16,0,0,0">
+                            <TextBlock Text="{Binding TechGroupInfo}"
+                                       FontSize="14"
+                                       FontWeight="Medium"
+                                       Foreground="{DynamicResource SystemAccentColorDark1Brush}"
+                                       TextWrapping="Wrap"/>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

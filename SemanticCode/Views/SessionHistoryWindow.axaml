@@ -1,0 +1,177 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:SemanticCode.ViewModels"
+        xmlns:converters="clr-namespace:SemanticCode.Converters"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        x:Class="SemanticCode.Views.SessionHistoryWindow"
+        x:DataType="vm:SessionHistoryViewModel"
+        Title="项目会话记录"
+        Width="900"
+        Height="650"
+        WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <converters:MessageTypeColorConverter x:Key="MessageTypeColorConverter"/>
+        <converters:MessageTypeDisplayConverter x:Key="MessageTypeDisplayConverter"/>
+    </Window.Resources>
+    
+    <Design.DataContext>
+        <vm:SessionHistoryViewModel />
+    </Design.DataContext>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock Text="项目会话记录" 
+                      FontSize="24" 
+                      FontWeight="Bold"
+                      Margin="0,0,0,10"/>
+            <TextBlock Text="{Binding ProjectName}" 
+                      FontSize="16" 
+                      Foreground="{DynamicResource SystemAccentColor}"
+                      Margin="0,0,0,5"/>
+            <TextBlock Text="{Binding ProjectPath}" 
+                      FontSize="12" 
+                      Opacity="0.7"/>
+        </StackPanel>
+
+        <!-- Toolbar -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" Margin="0,0,0,15">
+            <Button Content="刷新" 
+                   Command="{Binding RefreshCommand}"
+                   IsEnabled="{Binding !IsLoading}"/>
+            <TextBlock Text="{Binding SessionRecords.Count, StringFormat=共 {0} 条记录}" 
+                      VerticalAlignment="Center"
+                      Margin="10,0,0,0"/>
+        </StackPanel>
+
+        <!-- Loading Indicator -->
+        <Grid Grid.Row="2" IsVisible="{Binding IsLoading}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar IsIndeterminate="True" Width="200" Height="4" Margin="0,0,0,10"/>
+                <TextBlock Text="正在加载会话记录..." HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Session Records List with Virtualization -->
+        <ListBox Grid.Row="2" 
+                 IsVisible="{Binding !IsLoading}"
+                 ItemsSource="{Binding SessionRecords}"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 Background="Transparent"
+                 BorderThickness="0"
+                 SelectionMode="Single">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                           BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                           BorderThickness="1"
+                           CornerRadius="8"
+                           Padding="16"
+                           Margin="0,0,0,12"
+                           MinHeight="80">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Header with Message Type and Actions -->
+                            <Grid Grid.Row="0" Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Message Type Badge and Indicators -->
+                                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
+                                    <!-- Message Type Badge -->
+                                    <Border CornerRadius="12" Padding="8,4">
+                                        <Border.Background>
+                                            <SolidColorBrush Color="{Binding MessageType, Converter={StaticResource MessageTypeColorConverter}}"/>
+                                        </Border.Background>
+                                        <TextBlock Text="{Binding MessageType, Converter={StaticResource MessageTypeDisplayConverter}}"
+                                                  FontSize="11" FontWeight="Medium" Foreground="White"/>
+                                    </Border>
+
+                                    <!-- Session Index -->
+                                    <Border Background="{DynamicResource SystemFillColorNeutralBrush}"
+                                           CornerRadius="12"
+                                           Padding="8,4">
+                                        <TextBlock Text="{Binding Index, StringFormat=#{0}}"
+                                                  FontSize="11"
+                                                  FontWeight="Medium"
+                                                  Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                                    </Border>
+
+                                    <!-- Attachment Indicator -->
+                                    <Border Background="{DynamicResource SystemFillColorSuccessBrush}"
+                                           CornerRadius="12"
+                                           Padding="8,4"
+                                           IsVisible="{Binding HasPastedContent}">
+                                        <TextBlock Text="📎 附件"
+                                                  FontSize="11"
+                                                  FontWeight="Medium"
+                                                  Foreground="White"/>
+                                    </Border>
+                                </StackPanel>
+
+                            </Grid>
+
+                            <!-- Message Content -->
+                            <Border Grid.Row="1"
+                                   Background="{DynamicResource LayerFillColorDefaultBrush}"
+                                   CornerRadius="6"
+                                   Padding="12"
+                                   Margin="0,0,0,8">
+                                <TextBlock Text="{Binding Display}"
+                                          FontSize="13"
+                                          LineHeight="18"
+                                          TextWrapping="Wrap"
+                                          MaxHeight="120"
+                                          TextTrimming="CharacterEllipsis"/>
+                            </Border>
+
+                            <!-- Timestamp -->
+                            <TextBlock Grid.Row="2"
+                                      Text="{Binding Timestamp, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"
+                                      FontSize="11"
+                                      Opacity="0.6"
+                                      Margin="0,0,0,4"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.Styles>
+                <Style Selector="ListBox ListBoxItem">
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Margin" Value="0"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Style>
+            </ListBox.Styles>
+        </ListBox>
+
+        <!-- Footer -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="0,15,0,0">
+            <Button Content="关闭" 
+                   Click="OnCloseClick"
+                   Padding="20,8"/>
+        </StackPanel>
+    </Grid>
+</Window>

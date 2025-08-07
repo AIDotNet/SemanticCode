@@ -27,6 +27,11 @@
                     <ui:SymbolIconSource Symbol="Home"/>
                 </ui:NavigationViewItem.IconSource>
             </ui:NavigationViewItem>
+            <ui:NavigationViewItem Content="Claude Code账户信息管理" Tag="ClaudeCodeAccount">
+                <ui:NavigationViewItem.IconSource>
+                    <ui:SymbolIconSource Symbol="Account"/>
+                </ui:NavigationViewItem.IconSource>
+            </ui:NavigationViewItem>
             <ui:NavigationViewItem Content="Claude Code设置" Tag="ClaudeCodeSettings">
                 <ui:NavigationViewItem.IconSource>
                     <ui:SymbolIconSource Symbol="Code"/>
@@ -40,11 +45,6 @@
             <ui:NavigationViewItem Content="Agent Hub" Tag="AgentHub">
                 <ui:NavigationViewItem.IconSource>
                     <ui:SymbolIconSource Symbol="Library"/>
-                </ui:NavigationViewItem.IconSource>
-            </ui:NavigationViewItem>
-            <ui:NavigationViewItem Content="MCP管理" Tag="McpManagement">
-                <ui:NavigationViewItem.IconSource>
-                    <ui:SymbolIconSource Symbol="Setting"/>
                 </ui:NavigationViewItem.IconSource>
             </ui:NavigationViewItem>
         </ui:NavigationView.MenuItems>

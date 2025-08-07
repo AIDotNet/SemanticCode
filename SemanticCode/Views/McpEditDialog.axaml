@@ -1,0 +1,136 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:SemanticCode.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="500"
+        x:Class="SemanticCode.Views.McpEditDialog"
+        x:DataType="vm:McpEditViewModel"
+        Title="编辑项目MCP服务器"
+        Width="750"
+        Height="550"
+        WindowStartupLocation="CenterOwner">
+    <Design.DataContext>
+        <vm:McpEditViewModel />
+    </Design.DataContext>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock Text="编辑项目MCP服务器" 
+                      FontSize="20" 
+                      FontWeight="Bold"
+                      Margin="0,0,0,10"/>
+            <TextBlock Text="{Binding ProjectName}" 
+                      FontSize="14" 
+                      Foreground="{DynamicResource SystemAccentColor}"
+                      Margin="0,0,0,5"/>
+            <TextBlock Text="{Binding ProjectPath}" 
+                      FontSize="11" 
+                      Opacity="0.7"/>
+        </StackPanel>
+
+        <!-- Available MCP Servers Section -->
+        <StackPanel Grid.Row="1" Margin="0,0,0,15">
+            <TextBlock Text="可用的MCP服务器" 
+                      FontSize="16" 
+                      FontWeight="SemiBold"
+                      Margin="0,0,0,10"/>
+            <TextBlock Text="从所有项目中收集到的唯一MCP服务器列表" 
+                      FontSize="12" 
+                      Opacity="0.7"
+                      Margin="0,0,0,10"/>
+        </StackPanel>
+
+        <!-- MCP Servers List -->
+        <Border Grid.Row="2" 
+               Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+               BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+               BorderThickness="1"
+               CornerRadius="6"
+               Padding="15">
+            <ScrollViewer>
+                <ItemsControl ItemsSource="{Binding AvailableMcpServers}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="Transparent"
+                                   Padding="10"
+                                   Margin="0,0,0,5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <!-- Checkbox -->
+                                    <CheckBox Grid.Column="0" 
+                                             IsChecked="{Binding IsSelected}"
+                                             Margin="0,0,10,0"
+                                             VerticalAlignment="Center"/>
+                                    
+                                    <!-- Server Info -->
+                                    <StackPanel Grid.Column="1" Spacing="5">
+                                        <TextBlock Text="{Binding Name}" 
+                                                  FontWeight="Medium"
+                                                  FontSize="14"/>
+                                        <StackPanel Orientation="Horizontal" Spacing="15">
+                                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                                <TextBlock Text="类型:" FontSize="11" Opacity="0.7"/>
+                                                <TextBlock Text="{Binding Type}" FontSize="11"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="5" 
+                                                       IsVisible="{Binding Url, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                                <TextBlock Text="URL:" FontSize="11" Opacity="0.7"/>
+                                                <TextBlock Text="{Binding Url}" FontSize="11" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="5" 
+                                                       IsVisible="{Binding Command, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                                <TextBlock Text="命令:" FontSize="11" Opacity="0.7"/>
+                                                <TextBlock Text="{Binding Command}" FontSize="11" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    
+                                    <!-- Status Indicator -->
+                                    <Border Grid.Column="2" 
+                                           Background="{DynamicResource AccentFillColorDefaultBrush}"
+                                           CornerRadius="12"
+                                           Padding="8,4"
+                                           IsVisible="{Binding IsCurrentlyUsed}">
+                                        <TextBlock Text="当前使用" 
+                                                  FontSize="10" 
+                                                  Foreground="White"
+                                                  FontWeight="Medium"/>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Footer Buttons -->
+        <StackPanel Grid.Row="3" 
+                   Orientation="Horizontal" 
+                   HorizontalAlignment="Right" 
+                   Spacing="10" 
+                   Margin="0,20,0,0">
+            <Button Content="取消" 
+                   Click="OnCancelClick"
+                   Padding="20,8"/>
+            <Button Content="保存" 
+                   Click="OnSaveClick"
+                   Classes="accent"
+                   Padding="20,8"/>
+        </StackPanel>
+    </Grid>
+</Window>

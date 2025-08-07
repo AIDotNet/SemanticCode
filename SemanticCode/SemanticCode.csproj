@@ -45,5 +45,11 @@
       <Compile Update="App.axaml.cs">
         <DependentUpon>App.axaml</DependentUpon>
       </Compile>
+      <Compile Update="Pages\ClaudeCodeAccountView.axaml.cs">
+        <DependentUpon>ClaudeCodeAccountView.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\SessionHistoryWindow.axaml.cs">
+        <DependentUpon>SessionHistoryWindow.axaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 </Project>

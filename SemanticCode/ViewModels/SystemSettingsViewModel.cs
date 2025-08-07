@@ -17,6 +17,14 @@ public class SystemSettingsViewModel : ViewModelBase
     public string AutoStartLabel { get; } = "开机自启动";
     public string NotificationLabel { get; } = "通知";
     
+    // 作者信���相关属性
+    public string AboutLabel { get; } = "关于";
+    public string AuthorLabel { get; } = "作者信息";
+    public string TechGroupLabel { get; } = "技术交流";
+    public string AuthorInfo { get; } = "SemanticCode 开发团队";
+    public string TechGroupInfo { get; } = "技术交流群添加微信：wk28u9123456789";
+    public string ContactLabel { get; } = "联系方式";
+    
     private string _selectedTheme = "跟随系统";
     public string SelectedTheme
     {

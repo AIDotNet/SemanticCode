@@ -1,0 +1,466 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:SemanticCode.ViewModels"
+             xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="SemanticCode.Pages.ClaudeCodeAccountView"
+             x:DataType="vm:ClaudeCodeAccountViewModel">
+    <Design.DataContext>
+        <vm:ClaudeCodeAccountViewModel />
+    </Design.DataContext>
+
+    <ScrollViewer>
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                <TextBlock Text="Claude Code账户信息管理" 
+                          FontSize="24" 
+                          FontWeight="Bold"
+                          Margin="0,0,0,10"/>
+                <Button Content="刷新数据" 
+                       Command="{Binding RefreshDataCommand}"
+                       HorizontalAlignment="Left"/>
+            </StackPanel>
+
+            <!-- Tab Control -->
+            <TabControl Grid.Row="1" 
+                       SelectedIndex="{Binding SelectedTabIndex}">
+                
+                <!-- Tab 1: Account Info and Usage Statistics -->
+                <TabItem Header="账户信息">
+                    <ScrollViewer>
+                        <StackPanel Spacing="20" Margin="20">
+                            
+                            <!-- Account Information -->
+                            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                   BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                   BorderThickness="1"
+                                   CornerRadius="6"
+                                   Padding="20">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Text="账户信息" 
+                                              FontSize="18" 
+                                              FontWeight="SemiBold"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="邮箱地址：" FontWeight="Medium" Margin="0,0,10,5"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding UserEmail}" Margin="0,0,20,5"/>
+                                        
+                                        <TextBlock Grid.Row="0" Grid.Column="2" Text="组织名称：" FontWeight="Medium" Margin="0,0,10,5"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding OrganizationName}" Margin="0,0,0,5"/>
+                                        
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="项目数量：" FontWeight="Medium" Margin="0,0,10,5"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ProjectCount}" Margin="0,0,20,5"/>
+                                        
+                                        <TextBlock Grid.Row="1" Grid.Column="2" Text="MCP服务器：" FontWeight="Medium" Margin="0,0,10,5"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding McpServerCount}" Margin="0,0,0,5"/>
+                                        
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="总会话数：" FontWeight="Medium" Margin="0,0,10,5"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding TotalSessions}" Margin="0,0,20,5"/>
+                                        
+                                        <TextBlock Grid.Row="2" Grid.Column="2" Text="总消息数：" FontWeight="Medium" Margin="0,0,10,5"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding TotalMessages}" Margin="0,0,0,5"/>
+                                        
+                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="平均会话长度：" FontWeight="Medium" Margin="0,0,10,5"/>
+                                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding AverageSessionLength}" Margin="0,0,20,5"/>
+                                        
+                                        <TextBlock Grid.Row="3" Grid.Column="2" Text="错误率：" FontWeight="Medium" Margin="0,0,10,5"/>
+                                        <TextBlock Grid.Row="3" Grid.Column="3" Text="{Binding ErrorRateDisplay}" Margin="0,0,0,5"/>
+                                        
+                                        <TextBlock Grid.Row="4" Grid.Column="0" Text="最后活动：" FontWeight="Medium" Margin="0,0,10,0"/>
+                                        <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding LastActiveDateDisplay}" Margin="0,0,20,0"/>
+                                        
+                                        <TextBlock Grid.Row="4" Grid.Column="2" Text="常用模型：" FontWeight="Medium" Margin="0,0,10,0"/>
+                                        <TextBlock Grid.Row="4" Grid.Column="3" Text="{Binding MostUsedModel}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Usage Statistics -->
+                            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                   BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                   BorderThickness="1"
+                                   CornerRadius="6"
+                                   Padding="20">
+                                <StackPanel Spacing="15">
+                                    <TextBlock Text="使用统计" 
+                                              FontSize="18" 
+                                              FontWeight="SemiBold"/>
+                                    
+                                    <!-- Cost Information -->
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <Border Grid.Column="0" 
+                                               Background="{DynamicResource AccentFillColorDefaultBrush}"
+                                               CornerRadius="4"
+                                               Padding="15"
+                                               Margin="0,0,10,0">
+                                            <StackPanel>
+                                                <TextBlock Text="总消费金额" 
+                                                          FontSize="14" 
+                                                          Foreground="White"
+                                                          Opacity="0.9"/>
+                                                <TextBlock Text="{Binding TotalCost, StringFormat=${0:F4}}" 
+                                                          FontSize="20" 
+                                                          FontWeight="Bold"
+                                                          Foreground="White"/>
+                                            </StackPanel>
+                                        </Border>
+                                        
+                                        <Border Grid.Column="1" 
+                                               Background="{DynamicResource SystemFillColorSolidNeutralBrush}"
+                                               CornerRadius="4"
+                                               Padding="15"
+                                               Margin="10,0,0,0">
+                                            <StackPanel>
+                                                <TextBlock Text="API调用时长" 
+                                                          FontSize="14"
+                                                          Opacity="0.9"/>
+                                                <TextBlock Text="{Binding TotalApiDurationDisplay}" 
+                                                          FontSize="20" 
+                                                          FontWeight="Bold"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                    
+                                    <!-- Token Statistics -->
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        
+                                        <Border Grid.Row="0" Grid.Column="0"
+                                               Background="{DynamicResource SystemFillColorAttentionBrush}"
+                                               CornerRadius="4"
+                                               Padding="15"
+                                               Margin="0,0,10,10">
+                                            <StackPanel>
+                                                <TextBlock Text="输入Token总数" FontSize="14" Opacity="0.9"/>
+                                                <TextBlock Text="{Binding TotalInputTokensDisplay}" 
+                                                          FontSize="18" FontWeight="Bold"/>
+                                            </StackPanel>
+                                        </Border>
+                                        
+                                        <Border Grid.Row="0" Grid.Column="1"
+                                               Background="{DynamicResource SystemFillColorSuccessBrush}"
+                                               CornerRadius="4"
+                                               Padding="15"
+                                               Margin="10,0,0,10">
+                                            <StackPanel>
+                                                <TextBlock Text="输出Token总数" FontSize="14" Opacity="0.9"/>
+                                                <TextBlock Text="{Binding TotalOutputTokensDisplay}" 
+                                                          FontSize="18" FontWeight="Bold"/>
+                                            </StackPanel>
+                                        </Border>
+                                        
+                                        <Border Grid.Row="1" Grid.Column="0"
+                                               Background="{DynamicResource SystemFillColorCautionBrush}"
+                                               CornerRadius="4"
+                                               Padding="15"
+                                               Margin="0,0,10,0">
+                                            <StackPanel>
+                                                <TextBlock Text="缓存创建Token" FontSize="14" Opacity="0.9"/>
+                                                <TextBlock Text="{Binding TotalCacheCreationTokensDisplay}" 
+                                                          FontSize="18" FontWeight="Bold"/>
+                                            </StackPanel>
+                                        </Border>
+                                        
+                                        <Border Grid.Row="1" Grid.Column="1"
+                                               Background="{DynamicResource SystemFillColorSolidNeutralBrush}"
+                                               CornerRadius="4"
+                                               Padding="15"
+                                               Margin="10,0,0,0">
+                                            <StackPanel>
+                                                <TextBlock Text="缓存读取Token" FontSize="14" Opacity="0.9"/>
+                                                <TextBlock Text="{Binding TotalCacheReadTokensDisplay}" 
+                                                          FontSize="18" FontWeight="Bold"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- Tab 2: Projects List and MCP Management -->
+                <TabItem Header="项目管理">
+                    <Grid Margin="20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <!-- Projects Header -->
+                        <TextBlock Grid.Row="0" 
+                                  Text="项目列表" 
+                                  FontSize="18" 
+                                  FontWeight="SemiBold"
+                                  Margin="0,0,0,15"/>
+                        
+                        <!-- Projects DataGrid -->
+                        <DataGrid Grid.Row="1" 
+                                 ItemsSource="{Binding Projects}"
+                                 AutoGenerateColumns="False"
+                                 GridLinesVisibility="Horizontal"
+                                 HeadersVisibility="Column"
+                                 CanUserReorderColumns="True"
+                                 CanUserResizeColumns="True"
+                                 CanUserSortColumns="True">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="项目名称" 
+                                                   Binding="{Binding Name}" 
+                                                   Width="150"/>
+                                <DataGridTextColumn Header="项目路径" 
+                                                   Binding="{Binding Path}" 
+                                                   Width="200"/>
+                                <DataGridTextColumn Header="消费金额" 
+                                                   Binding="{Binding Cost, StringFormat=${0:F4}}" 
+                                                   Width="100"/>
+                                <DataGridTextColumn Header="输入Token" 
+                                                   Binding="{Binding InputTokensDisplay}" 
+                                                   Width="100"/>
+                                <DataGridTextColumn Header="输出Token" 
+                                                   Binding="{Binding OutputTokensDisplay}" 
+                                                   Width="100"/>
+                                <DataGridTextColumn Header="API时长" 
+                                                   Binding="{Binding ApiDurationDisplay}" 
+                                                   SortMemberPath="ApiDurationRaw"
+                                                   Width="100"/>
+                                <DataGridTemplateColumn Header="操作" Width="180">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" 
+                                                       Spacing="8" 
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center">
+                                                
+                                                <!-- 编辑MCP按钮 -->
+                                                <Button Command="{Binding $parent[DataGrid].((vm:ClaudeCodeAccountViewModel)DataContext).EditMcpCommand}"
+                                                       CommandParameter="{Binding}"
+                                                       ToolTip.Tip="编辑MCP配置"
+                                                       Foreground="White"
+                                                       BorderThickness="0"
+                                                       CornerRadius="4"
+                                                       Width="32"
+                                                       Height="32"
+                                                       Padding="0">
+                                                    <TextBlock Text="编辑" 
+                                                              FontSize="12" 
+                                                              TextAlignment="Center"
+                                                              VerticalAlignment="Center"/>
+                                                </Button>
+                                                
+                                                <!-- 查看会话按钮 -->
+                                                <Button Command="{Binding $parent[DataGrid].((vm:ClaudeCodeAccountViewModel)DataContext).ViewSessionHistoryCommand}"
+                                                        CommandParameter="{Binding}"
+                                                        ToolTip.Tip="查看会话历史"
+                                                        Foreground="White"
+                                                        BorderThickness="0"
+                                                        CornerRadius="4"
+                                                        Width="32"
+                                                        Height="32"
+                                                        Padding="0">
+                                                    <TextBlock Text="会话" 
+                                                              FontSize="12" 
+                                                              TextAlignment="Center"
+                                                              VerticalAlignment="Center"/>
+                                                </Button>
+                                                
+                                                <!-- 打开Claude Code按钮 -->
+                                                <Button Command="{Binding $parent[DataGrid].((vm:ClaudeCodeAccountViewModel)DataContext).OpenClaudeCommand}"
+                                                        CommandParameter="{Binding}"
+                                                        ToolTip.Tip="打开Claude Code"
+                                                        Foreground="White"
+                                                        BorderThickness="0"
+                                                        CornerRadius="4"
+                                                        Width="32"
+                                                        Height="32"
+                                                        Padding="0">
+                                                    <TextBlock Text="打开" 
+                                                              FontSize="12" 
+                                                              TextAlignment="Center"
+                                                              VerticalAlignment="Center"/>
+                                                </Button>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+
+                <!-- Tab 3: Session Analytics -->
+                <TabItem Header="会话分析">
+                    <Grid Margin="20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <TextBlock Grid.Row="0" 
+                                  Text="项目会话分析" 
+                                  FontSize="18" 
+                                  FontWeight="SemiBold"
+                                  Margin="0,0,0,15"/>
+                        
+                        <DataGrid Grid.Row="1" 
+                                 ItemsSource="{Binding SessionAnalytics}"
+                                 AutoGenerateColumns="False"
+                                 GridLinesVisibility="Horizontal"
+                                 HeadersVisibility="Column"
+                                 CanUserReorderColumns="True"
+                                 CanUserResizeColumns="True">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="项目名称" 
+                                                   Binding="{Binding ProjectName}" 
+                                                   Width="150"/>
+                                <DataGridTextColumn Header="会话数" 
+                                                   Binding="{Binding SessionCount}" 
+                                                   Width="100"/>
+                                <DataGridTextColumn Header="消息数" 
+                                                   Binding="{Binding MessageCount}" 
+                                                   Width="100"/>
+                                <DataGridTextColumn Header="平均会话长度" 
+                                                   Binding="{Binding AverageMessagesPerSession}" 
+                                                   Width="120"/>
+                                <DataGridTextColumn Header="错误数" 
+                                                   Binding="{Binding ErrorCount}" 
+                                                   Width="80"/>
+                                <DataGridTextColumn Header="错误率" 
+                                                   Binding="{Binding ErrorRateDisplay}" 
+                                                   Width="80"/>
+                                <DataGridTextColumn Header="最后活动" 
+                                                   Binding="{Binding LastActiveDateDisplay}" 
+                                                   Width="120"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+
+                <!-- Tab 4: Model Usage Statistics -->
+                <TabItem Header="模型使用">
+                    <Grid Margin="20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <TextBlock Grid.Row="0" 
+                                  Text="模型使用统计" 
+                                  FontSize="18" 
+                                  FontWeight="SemiBold"
+                                  Margin="0,0,0,15"/>
+                        
+                        <DataGrid Grid.Row="1" 
+                                 ItemsSource="{Binding ModelUsageStats}"
+                                 AutoGenerateColumns="False"
+                                 GridLinesVisibility="Horizontal"
+                                 HeadersVisibility="Column"
+                                 CanUserReorderColumns="True"
+                                 CanUserResizeColumns="True">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="模型名称" 
+                                                   Binding="{Binding ModelName}" 
+                                                   Width="200"/>
+                                <DataGridTextColumn Header="使用次数" 
+                                                   Binding="{Binding UsageCount}" 
+                                                   Width="100"/>
+                                <DataGridTextColumn Header="总Token数" 
+                                                   Binding="{Binding TotalTokensDisplay}" 
+                                                   Width="120"/>
+                                <DataGridTextColumn Header="总消费" 
+                                                   Binding="{Binding TotalCostDisplay}" 
+                                                   Width="100"/>
+                                <DataGridTextColumn Header="使用项目数" 
+                                                   Binding="{Binding ProjectsUsing}" 
+                                                   Width="100"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+
+                <!-- Tab 5: Project Activity Ranking -->
+                <TabItem Header="项目活跃度">
+                    <Grid Margin="20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <StackPanel Grid.Row="0" Spacing="10" Margin="0,0,0,15">
+                            <TextBlock Text="项目活跃度排行" 
+                                      FontSize="18" 
+                                      FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding MostActiveProject, StringFormat='最活跃项目: {0}'}" 
+                                      FontSize="14" 
+                                      Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"/>
+                        </StackPanel>
+                        
+                        <DataGrid Grid.Row="1" 
+                                 ItemsSource="{Binding ProjectActivity}"
+                                 AutoGenerateColumns="False"
+                                 GridLinesVisibility="Horizontal"
+                                 HeadersVisibility="Column"
+                                 CanUserReorderColumns="True"
+                                 CanUserResizeColumns="True">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="排名" 
+                                                   Binding="{Binding Rank}" 
+                                                   Width="60"/>
+                                <DataGridTextColumn Header="项目名称" 
+                                                   Binding="{Binding ProjectName}" 
+                                                   Width="150"/>
+                                <DataGridTextColumn Header="活跃度评分" 
+                                                   Binding="{Binding ActivityScore}" 
+                                                   Width="100"/>
+                                <DataGridTextColumn Header="总Token数" 
+                                                   Binding="{Binding TotalTokensDisplay}" 
+                                                   Width="120"/>
+                                <DataGridTextColumn Header="总消费" 
+                                                   Binding="{Binding TotalCostDisplay}" 
+                                                   Width="100"/>
+                                <DataGridTextColumn Header="MCP服务器数" 
+                                                   Binding="{Binding McpServerCount}" 
+                                                   Width="120"/>
+                                <DataGridTextColumn Header="最后活动" 
+                                                   Binding="{Binding LastActivity}" 
+                                                   Width="120"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

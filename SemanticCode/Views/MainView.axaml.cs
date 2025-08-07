@@ -60,6 +60,10 @@ public partial class MainView : UserControl
                 viewModel = new HomeViewModel();
                 page = new HomeView();
                 break;
+            case "ClaudeCodeAccount":
+                viewModel = new ClaudeCodeAccountViewModel();
+                page = new ClaudeCodeAccountView();
+                break;
             case "ClaudeCodeSettings":
                 viewModel = new ClaudeCodeSettingsViewModel();
                 page = new ClaudeCodeSettingsView();
@@ -75,10 +79,6 @@ public partial class MainView : UserControl
             case "SystemSettings":
                 viewModel = new SystemSettingsViewModel();
                 page = new SystemSettingsView();
-                break;
-            case "McpManagement":
-                viewModel = new McpManagementViewModel();
-                page = new McpManagementView();
                 break;
         }
 
