@@ -662,6 +662,8 @@ public class HomeViewModel : ViewModelBase
         catch (Exception ex)
         {
             AddConsoleOutput($"Claude Code 安装异常: {ex.Message}\n");
+            
+            await Task.Delay(5000); // 延迟1秒以便用户看到错误信息
             throw;
         }
     }
