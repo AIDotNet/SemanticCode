@@ -2,256 +2,277 @@
 
 <div align="center">
 
-![SemanticCode Logo](SemanticCode/Assets/avalonia-logo.ico)
+![SemanticCode Logo](SemanticCode/Assets/favicon.ico)
 
-**一个现代化的 Claude Code 配置管理工具**
+**A Modern Claude Code Configuration Management Tool**
 
 [![Release](https://img.shields.io/github/v/release/AIDotNet/SemanticCode)](https://github.com/AIDotNet/SemanticCode/releases)
 [![Build Status](https://github.com/AIDotNet/SemanticCode/actions/workflows/release.yml/badge.svg)](https://github.com/AIDotNet/SemanticCode/actions)
-[![.NET](https://img.shields.io/badge/.NET-9.0-512bd4)](https://dotnet.microsoft.com/download/dotnet/9.0)
-[![Avalonia](https://img.shields.io/badge/Avalonia-11.3.2-blue)](https://avaloniaui.net/)
+[![.NET](https://img.shields.io/badge/.NET-10.0-512bd4)](https://dotnet.microsoft.com/download/dotnet/10.0)
+[![Avalonia](https://img.shields.io/badge/Avalonia-11.3.3-blue)](https://avaloniaui.net/)
 [![License](https://img.shields.io/github/license/AIDotNet/SemanticCode)](LICENSE)
 
-[功能特性](#功能特性) • [安装](#安装) • [使用指南](#使用指南) • [技术架构](#技术架构) • [开发](#开发) • [贡献](#贡献)
+[Features](#-features) • [Installation](#-installation) • [Usage](#-usage-guide) • [Development](#-development) • [Contributing](#-contributing)
 
 </div>
 
-## 📖 项目简介
+## 📖 Overview
 
-SemanticCode 是一个专为 Claude Code 用户设计的现代化配置管理工具。它提供了直观的图形界面，帮助用户轻松管理 Claude Code 的各种配置选项，包括 API 设置、模型选择、性能参数等。
+SemanticCode is a modern, cross-platform desktop application designed to simplify the management of Claude Code configurations. Built with .NET 10 and Avalonia UI, it provides an intuitive graphical interface for managing API settings, model configurations, and advanced Claude Code parameters without manual JSON editing.
 
-### 🌟 为什么选择 SemanticCode？
+### 🌟 Why SemanticCode?
 
-- **🎯 专业化**: 专门为 Claude Code 设计，深度集成其配置体系
-- **🚀 现代化**: 基于 .NET 9 和 Avalonia UI，提供原生跨平台体验
-- **⚡ 高性能**: 支持 AOT 编译，启动快速，内存占用小
-- **🔧 易用性**: 直观的图形界面，无需手动编辑配置文件
-- **🛡️ 可靠性**: 完整的配置验证和错误处理机制
+- **🎯 Specialized**: Purpose-built for Claude Code with deep integration
+- **🚀 Modern**: Built on .NET 10 and Avalonia UI for native cross-platform experience
+- **⚡ High Performance**: Supports AOT compilation for fast startup and low memory usage
+- **🔧 User-Friendly**: Intuitive GUI eliminates manual configuration file editing
+- **🛡️ Reliable**: Complete configuration validation and error handling
+- **🌐 Agent Hub**: Integrated agent marketplace for discovering and installing AI agents
 
-## ✨ 功能特性
+## ✨ Features
 
-### 🎛️ 配置管理
-- **API 配置**: 管理 Anthropic API 密钥、基础 URL 和认证设置
-- **模型选择**: 支持最新的 Claude 模型系列，包括 Sonnet 4、Haiku 等
-- **性能调优**: 调节 Token 限制、温度值、上下文大小等参数
-- **工具管理**: 启用/禁用特定的 Claude Code 工具功能
+### 🎛️ Configuration Management
+- **API Configuration**: Manage Anthropic API keys, base URLs, and authentication settings
+- **Model Selection**: Support for latest Claude models including Sonnet 4, Haiku, and more
+- **Performance Tuning**: Adjust token limits, temperature values, context sizes, and other parameters
+- **Tools Management**: Enable/disable specific Claude Code tools and features
+- **Memory Settings**: Configure Claude Code memory persistence and cleanup
 
-### 🖥️ 用户界面
-- **现代化设计**: 基于 FluentAvalonia UI，提供类似 Windows 11 的现代界面
-- **响应式布局**: 适配不同屏幕尺寸和分辨率
-- **实时反馈**: 配置变更即时生效，状态信息实时更新
-- **多语言支持**: 完整的中文界面，符合国内用户习惯
+### 🤖 Agent Hub Integration
+- **Agent Discovery**: Browse and discover AI agents from the community hub
+- **One-Click Installation**: Download and install agents directly from the interface
+- **Local Agent Management**: View, organize, and manage installed agents
+- **Agent Directory**: Automatic management of the `.claude/agents` directory
+- **Cache Management**: Intelligent caching system for improved performance
 
-### 🔄 版本管理
-- **自动更新检查**: 自动检查 GitHub 发布的最新版本
-- **版本信息显示**: 清晰显示当前版本和可用更新
-- **一键更新**: 简化的更新流程，保持软件最新状态
+### 🖥️ Modern User Interface
+- **Fluent Design**: Based on FluentAvalonia UI with Windows 11-style modern interface
+- **Responsive Layout**: Adapts to different screen sizes and resolutions
+- **Real-time Feedback**: Configuration changes take effect immediately
+- **System Tray Integration**: Background operation with tray icon and quick access menu
+- **Multi-language Ready**: Designed for internationalization support
 
-### 🛠️ 系统集成
-- **配置文件同步**: 与 Claude Code 原生配置文件完全兼容
-- **目录管理**: 自动管理 `.claude` 配置目录
-- **备份恢复**: 支持配置重置和默认值恢复
+### 🔄 Version Management
+- **Auto-Update Check**: Automatically checks for latest versions on GitHub
+- **Version Display**: Clear display of current version and available updates
+- **Update Notifications**: Built-in update notification system
+- **Release Integration**: Seamless integration with GitHub releases
 
-## 📥 安装
+### 🛠️ System Integration
+- **Configuration Sync**: Fully compatible with Claude Code native configuration files
+- **Directory Management**: Automatic management of `.claude` configuration directory
+- **Backup & Recovery**: Support for configuration reset and default value restoration
+- **Cross-Platform**: Native support for Windows, Linux, and macOS
 
-### 系统要求
+## 📥 Installation
 
-- **操作系统**: Windows 10/11, Linux (Ubuntu 20.04+), macOS 10.15+
-- **运行时**: 无需安装 .NET Runtime（自包含部署）
-- **内存**: 最少 512MB RAM
-- **存储**: 约 100MB 可用空间
+### System Requirements
 
-### 下载安装
+- **Operating System**: Windows 10/11, Linux (Ubuntu 20.04+), macOS 10.15+
+- **Runtime**: No .NET Runtime required (self-contained deployment)
+- **Memory**: Minimum 512MB RAM
+- **Storage**: Approximately 100MB available space
 
-#### 📦 预编译版本 (推荐)
+### Download & Install
 
-从 [Releases](https://github.com/AIDotNet/SemanticCode/releases) 页面下载适合您系统的版本：
+#### 📦 Pre-built Releases (Recommended)
 
-**Windows 用户:**
+Download from [Releases](https://github.com/AIDotNet/SemanticCode/releases) page:
+
+**Windows Users:**
 ```bash
-# 下载并解压
+# Download and extract
 wget https://github.com/AIDotNet/SemanticCode/releases/latest/download/SemanticCode-windows-x64.zip
 unzip SemanticCode-windows-x64.zip
 
-# 运行
+# Run
 ./SemanticCode.Desktop.exe
 ```
 
-**Linux 用户:**
+**Linux Users:**
 ```bash
-# 下载并解压
+# Download and extract
 wget https://github.com/AIDotNet/SemanticCode/releases/latest/download/SemanticCode-linux-x64.tar.gz
 tar -xzf SemanticCode-linux-x64.tar.gz
 
-# 设置执行权限并运行
+# Set permissions and run
 chmod +x SemanticCode.Desktop
 ./SemanticCode.Desktop
 ```
 
-#### 🔨 从源码构建
+**macOS Users:**
+```bash
+# Download and extract
+wget https://github.com/AIDotNet/SemanticCode/releases/latest/download/SemanticCode-macos-x64.tar.gz
+tar -xzf SemanticCode-macos-x64.tar.gz
+
+# Set permissions and run
+chmod +x SemanticCode.Desktop
+./SemanticCode.Desktop
+```
+
+#### 🔨 Build from Source
 
 ```bash
-# 克隆仓库
+# Clone repository
 git clone https://github.com/AIDotNet/SemanticCode.git
 cd SemanticCode
 
-# 构建项目
+# Restore dependencies
 dotnet restore
+
+# Build project
 dotnet build --configuration Release
 
-# 发布
+# Publish for your platform
 dotnet publish SemanticCode.Desktop/SemanticCode.Desktop.csproj \
   -c Release -r win-x64 --self-contained true \
   -p:PublishSingleFile=true \
-  -o ./publish
+  -o ./publish/win-x64
 ```
 
-## 🚀 使用指南
+## 🚀 Usage Guide
 
-### 首次配置
+### Initial Setup
 
-1. **启动应用**: 运行 SemanticCode 可执行文件
-2. **导航到设置**: 点击左侧菜单中的"Claude Code设置"
-3. **配置 API**: 输入您的 Anthropic API 密钥
-4. **选择模型**: 选择适合的主要模型和快速模型
-5. **调整参数**: 根据需求调整 Token 限制和温度值
-6. **保存设置**: 点击保存按钮应用配置
+1. **Launch Application**: Run the SemanticCode executable
+2. **Navigate to Settings**: Click "Claude Code Settings" in the left menu
+3. **Configure API**: Enter your Anthropic API key
+4. **Select Models**: Choose appropriate primary and fast models
+5. **Adjust Parameters**: Modify token limits and temperature values as needed
+6. **Save Settings**: Click save to apply configuration
 
-### 配置项说明
+### Configuration Options
 
-| 配置项 | 说明 | 默认值 | 示例 |
-|--------|------|--------|------|
-| API 密钥 | Anthropic API 认证密钥 | 无 | `sk-ant-api03-...` |
-| 基础 URL | API 服务器地址 | `https://api.anthropic.com` | 支持代理服务器 |
-| 主要模型 | 主要对话模型 | `claude-sonnet-4-20250514` | 最新 Sonnet 4 模型 |
-| 快速模型 | 后台任务模型 | `claude-3-5-haiku-20241022` | 用于快速响应 |
-| 最大 Token | 单次请求 Token 限制 | `4096` | 根据模型调整 |
-| 温度值 | 回复随机性控制 | `0.7` | 0.0-2.0 之间 |
-| 调试模式 | 启用详细日志 | `false` | 开发调试用 |
+| Setting | Description | Default | Example |
+|---------|-------------|---------|---------|
+| API Key | Anthropic API authentication key | None | `sk-ant-api03-...` |
+| Base URL | API server address | `https://api.anthropic.com` | Support for proxy servers |
+| Primary Model | Main conversation model | `claude-sonnet-4-20250514` | Latest Sonnet 4 model |
+| Fast Model | Background task model | `claude-3-5-haiku-20241022` | For quick responses |
+| Max Tokens | Single request token limit | `4096` | Adjust based on model |
+| Temperature | Response randomness control | `0.7` | Range: 0.0-2.0 |
+| Debug Mode | Enable detailed logging | `false` | For development debugging |
 
-### 高级功能
+### Agent Hub Usage
 
-#### 🔧 工具管理
-SemanticCode 支持管理 Claude Code 的各种工具功能：
+1. **Browse Agents**: Navigate to "Agent Hub" to discover available agents
+2. **Install Agents**: Click "Install" on any agent to download and install
+3. **Manage Agents**: Use "Agents Management" to view and organize installed agents
+4. **Agent Directory**: Agents are automatically saved to `~/.claude/agents/`
 
-- **文件操作工具**: 控制文件读写权限
-- **代码执行工具**: 管理代码运行环境
-- **网络访问工具**: 配置网络请求权限
-- **系统集成工具**: 控制系统级操作
-
-#### 📁 配置文件位置
+### Configuration File Locations
 - **Windows**: `%USERPROFILE%\.claude\settings.json`
 - **Linux/macOS**: `~/.claude/settings.json`
 
-#### 🔄 配置同步
-SemanticCode 生成的配置文件与官方 Claude Code 完全兼容，可以无缝切换使用。
+## 🏗️ Technical Architecture
 
-## 🏗️ 技术架构
+### Core Technology Stack
 
-### 核心技术栈
+- **UI Framework**: [Avalonia UI 11.3.3](https://avaloniaui.net/) - Cross-platform XAML UI framework
+- **UI Library**: [FluentAvalonia 2.4.0](https://github.com/amwx/FluentAvalonia) - Fluent Design components
+- **Runtime**: [.NET 10.0](https://dotnet.microsoft.com/download/dotnet/10.0) - Latest .NET platform
+- **Architecture**: MVVM (Model-View-ViewModel) with ReactiveUI
+- **Build System**: MSBuild + GitHub Actions
 
-- **前端框架**: [Avalonia UI 11.3.2](https://avaloniaui.net/) - 跨平台 XAML UI 框架
-- **UI 库**: [FluentAvalonia 2.4.0](https://github.com/amwx/FluentAvalonia) - Fluent Design 风格组件
-- **运行时**: [.NET 9.0](https://dotnet.microsoft.com/download/dotnet/9.0) - 最新 .NET 平台
-- **架构模式**: MVVM (Model-View-ViewModel) 与 ReactiveUI
-- **构建系统**: MSBuild + GitHub Actions
-
-### 项目结构
+### Project Structure
 
 ```
 SemanticCode/
-├── SemanticCode/                 # 核心 UI 库
-│   ├── ViewModels/              # 视图模型层
-│   │   ├── MainViewModel.cs     # 主窗口视图模型
-│   │   ├── ClaudeCodeSettingsViewModel.cs  # 设置页面视图模型
-│   │   └── HomeViewModel.cs     # 首页视图模型
-│   ├── Views/                   # 视图层
-│   │   ├── MainView.axaml       # 主界面布局
-│   │   └── MainWindow.axaml     # 主窗口
-│   ├── Pages/                   # 页面组件
-│   │   ├── HomeView.axaml       # 首页界面
-│   │   └── ClaudeCodeSettingsView.axaml  # 设置界面
-│   ├── Services/                # 服务层
-│   │   ├── ClaudeCodeSettingsService.cs  # 配置管理服务
-│   │   └── VersionService.cs    # 版本检查服务
-│   ├── Models/                  # 数据模型
-│   │   ├── ClaudeCodeSettings.cs # 配置数据模型
-│   │   └── ValidationResult.cs  # 验证结果模型
-│   └── Assets/                  # 资源文件
-│       └── avalonia-logo.ico    # 应用图标
-├── SemanticCode.Desktop/        # 桌面应用启动器
-│   ├── Program.cs               # 应用入口点
-│   └── app.manifest             # Windows 应用清单
-├── .github/workflows/           # CI/CD 配置
-│   └── release.yml              # 自动构建发布
-└── Directory.Packages.props     # 包版本管理
+├── SemanticCode/                     # Core UI Library
+│   ├── ViewModels/                   # View Models
+│   │   ├── MainViewModel.cs          # Main window view model
+│   │   ├── ClaudeCodeSettingsViewModel.cs # Settings page
+│   │   ├── AgentHubViewModel.cs      # Agent hub functionality
+│   │   └── AgentsManagementViewModel.cs # Agent management
+│   ├── Views/                        # Views and Windows
+│   │   ├── MainView.axaml            # Main interface layout
+│   │   ├── MainWindow.axaml          # Application window
+│   │   └── SessionHistoryWindow.axaml # Session history
+│   ├── Pages/                        # Page Components
+│   │   ├── HomeView.axaml            # Home page
+│   │   ├── ClaudeCodeSettingsView.axaml # Settings interface
+│   │   ├── AgentHubView.axaml        # Agent discovery
+│   │   └── AgentsManagementView.axaml # Agent management
+│   ├── Services/                     # Business Logic Services
+│   │   ├── ClaudeCodeSettingsService.cs # Configuration management
+│   │   ├── AgentHubService.cs        # Agent hub integration
+│   │   ├── AgentDirectoryService.cs  # Local agent management
+│   │   ├── UpdateService.cs          # Update checking
+│   │   └── VersionService.cs         # Version management
+│   ├── Models/                       # Data Models
+│   │   ├── ClaudeCodeSettings.cs     # Configuration models
+│   │   ├── AgentModel.cs             # Agent data structures
+│   │   ├── AgentHubModels.cs         # Hub response models
+│   │   └── ValidationResult.cs       # Validation results
+│   └── Assets/                       # Resources
+│       └── favicon.ico               # Application icon
+├── SemanticCode.Desktop/             # Desktop App Launcher
+│   ├── Program.cs                    # Application entry point
+│   └── app.manifest                  # Windows app manifest
+├── .github/workflows/                # CI/CD Configuration
+│   └── release.yml                   # Automated build & release
+├── setup/                            # Installation Scripts
+│   └── setup.iss                     # Inno Setup script
+└── Directory.Packages.props          # Package version management
 ```
 
-### 设计模式
+### Design Patterns
 
-#### MVVM 架构
-- **Model**: 数据模型和业务逻辑 (`ClaudeCodeSettings`, `VersionInfo`)
-- **View**: XAML 用户界面 (`.axaml` 文件)
-- **ViewModel**: 界面逻辑控制器 (`*ViewModel.cs` 文件)
+#### MVVM Architecture
+- **Models**: Data structures and business logic (`ClaudeCodeSettings`, `AgentModel`)
+- **Views**: XAML user interfaces (`.axaml` files)
+- **ViewModels**: UI logic controllers (`*ViewModel.cs` files)
 
-#### 服务层设计
-- **配置服务** (`ClaudeCodeSettingsService`): 处理配置文件的读写和验证
-- **版本服务** (`VersionService`): 管理版本检查和更新通知
-- **依赖注入**: 使用构造函数注入实现松耦合
+#### Service Layer Design
+- **Configuration Service**: Handles settings file read/write and validation
+- **Agent Hub Service**: Manages agent discovery and installation with caching
+- **Version Service**: Manages version checking and update notifications
+- **Dependency Injection**: Constructor injection for loose coupling
 
-#### 响应式编程
-基于 ReactiveUI 实现响应式数据绑定：
+#### Reactive Programming
+Built on ReactiveUI for reactive data binding:
 ```csharp
-// 属性变更自动通知
+// Property change notification
 public string ApiKey
 {
     get => _apiKey;
     set => this.RaiseAndSetIfChanged(ref _apiKey, value);
 }
 
-// 命令绑定
+// Command binding with validation
 SaveCommand = ReactiveCommand.CreateFromTask(
     SaveSettingsAsync, 
     this.WhenAnyValue(x => x.HasChanges)
 );
 ```
 
-### AOT 编译优化
+### AOT Compilation Support
 
-SemanticCode 支持 Ahead-of-Time (AOT) 编译，带来以下优势：
+SemanticCode supports Ahead-of-Time (AOT) compilation with benefits:
 
-- **快速启动**: 消除 JIT 编译开销
-- **小内存占用**: 减少运行时内存使用
-- **原生性能**: 接近原生应用的执行效率
-- **简化部署**: 无需预装 .NET Runtime
+- **Fast Startup**: Eliminates JIT compilation overhead
+- **Low Memory Usage**: Reduced runtime memory consumption
+- **Native Performance**: Near-native application execution speed
+- **Simplified Deployment**: No .NET Runtime installation required
 
-AOT 配置 (`SemanticCode.Desktop.csproj`):
-```xml
-<PropertyGroup>
-    <PublishAot>true</PublishAot>
-    <TrimMode>lite</TrimMode>
-    <PublishTrimmed>true</PublishTrimmed>
-    <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
-</PropertyGroup>
-```
+## 🚀 Development
 
-## 🚀 开发
+### Development Environment Setup
 
-### 开发环境设置
-
-1. **安装 .NET 9 SDK**:
+1. **Install .NET 10 SDK**:
    ```bash
-   # Windows (使用 winget)
-   winget install Microsoft.DotNet.SDK.9
+   # Windows (using winget)
+   winget install Microsoft.DotNet.SDK.10
    
-   # macOS (使用 Homebrew)
+   # macOS (using Homebrew)
    brew install dotnet
    
    # Linux (Ubuntu)
-   sudo apt-get install -y dotnet-sdk-9.0
+   sudo apt-get install -y dotnet-sdk-10.0
    ```
 
-2. **克隆并构建**:
+2. **Clone and Build**:
    ```bash
    git clone https://github.com/AIDotNet/SemanticCode.git
    cd SemanticCode
@@ -259,92 +280,92 @@ AOT 配置 (`SemanticCode.Desktop.csproj`):
    dotnet build
    ```
 
-3. **运行开发版本**:
+3. **Run Development Version**:
    ```bash
    dotnet run --project SemanticCode.Desktop
    ```
 
-### 开发工具
+### Development Tools
 
-推荐的开发环境：
-- **IDE**: Visual Studio 2022, JetBrains Rider, 或 VS Code
-- **调试工具**: Avalonia DevTools (已集成)
-- **版本控制**: Git
-- **包管理**: NuGet (Central Package Management)
+Recommended development environment:
+- **IDE**: Visual Studio 2022, JetBrains Rider, or VS Code
+- **Debug Tools**: Avalonia DevTools (integrated)
+- **Version Control**: Git
+- **Package Management**: NuGet with Central Package Management
 
-### 调试技巧
+### Debugging Tips
 
-1. **Avalonia DevTools**: 在 Debug 模式下按 `F12` 打开
-2. **日志输出**: 使用 `System.Diagnostics.Debug.WriteLine()`
-3. **断点调试**: IDE 中正常设置断点即可
+1. **Avalonia DevTools**: Press `F12` in Debug mode
+2. **Logging**: Use `System.Diagnostics.Debug.WriteLine()`
+3. **Breakpoint Debugging**: Standard IDE breakpoint support
 
-### 代码规范
+### Code Standards
 
-- **命名约定**: 遵循 C# 标准命名规范
-- **代码格式**: 使用 EditorConfig 统一格式
-- **注释**: 对公共 API 提供 XML 文档注释
-- **异步编程**: 优先使用 `async/await` 模式
+- **Naming Convention**: Follow C# standard naming conventions
+- **Code Formatting**: Use EditorConfig for consistent formatting
+- **Documentation**: Provide XML documentation comments for public APIs
+- **Async Programming**: Prefer `async/await` patterns
 
-## 🤝 贡献
+## 🤝 Contributing
 
-我们欢迎所有形式的贡献！无论是代码贡献、问题报告还是功能建议。
+We welcome contributions of all kinds! Whether it's code contributions, bug reports, or feature suggestions.
 
-### 贡献方式
+### How to Contribute
 
-1. **Fork 仓库**
-2. **创建功能分支**: `git checkout -b feature/amazing-feature`
-3. **提交更改**: `git commit -m 'Add some amazing feature'`
-4. **推送分支**: `git push origin feature/amazing-feature`
-5. **创建 Pull Request**
+1. **Fork the Repository**
+2. **Create Feature Branch**: `git checkout -b feature/amazing-feature`
+3. **Commit Changes**: `git commit -m 'Add amazing feature'`
+4. **Push Branch**: `git push origin feature/amazing-feature`
+5. **Create Pull Request**
 
-### 开发贡献指南
+### Development Contribution Guidelines
 
-#### 🐛 报告问题
-- 使用 [Issue 模板](https://github.com/AIDotNet/SemanticCode/issues/new/choose)
-- 提供详细的重现步骤
-- 包含系统环境信息
-- 添加相关的日志输出
+#### 🐛 Reporting Issues
+- Use [Issue Templates](https://github.com/AIDotNet/SemanticCode/issues/new/choose)
+- Provide detailed reproduction steps
+- Include system environment information
+- Add relevant log output
 
-#### 💡 功能建议
-- 在 Issues 中描述新功能需求
-- 说明功能的使用场景
-- 讨论实现方案的可行性
+#### 💡 Feature Suggestions
+- Describe feature requirements in Issues
+- Explain use cases for the feature
+- Discuss implementation feasibility
 
-#### 🔧 代码贡献
-- 遵循现有的代码风格
-- 添加必要的单元测试
-- 更新相关文档
-- 确保 CI 检查通过
+#### 🔧 Code Contributions
+- Follow existing code style
+- Add necessary unit tests
+- Update relevant documentation
+- Ensure CI checks pass
 
-### 路线图
+### Roadmap
 
-- [ ] **v0.2.0**: 添加配置文件导入/导出功能
-- [ ] **v0.3.0**: 支持多配置文件管理
-- [ ] **v0.4.0**: 集成使用统计和分析
-- [ ] **v0.5.0**: 添加插件系统支持
-- [ ] **v1.0.0**: 完整的生产版本
+- [ ] **v0.2.0**: Configuration import/export functionality
+- [ ] **v0.3.0**: Multi-configuration profile management
+- [ ] **v0.4.0**: Usage statistics and analytics integration
+- [ ] **v0.5.0**: Plugin system support
+- [ ] **v1.0.0**: Full production release
 
-## 📄 许可证
+## 📄 License
 
-本项目基于 [MIT 许可证](LICENSE) 开源。
+This project is open source under the [MIT License](LICENSE).
 
-## 🙏 致谢
+## 🙏 Acknowledgments
 
-- [Avalonia UI](https://avaloniaui.net/) - 出色的跨平台 UI 框架
-- [FluentAvalonia](https://github.com/amwx/FluentAvalonia) - 美观的 Fluent Design 组件库
-- [ReactiveUI](https://www.reactiveui.net/) - 强大的响应式 MVVM 框架
-- [Anthropic](https://www.anthropic.com/) - 提供强大的 Claude AI 服务
+- [Avalonia UI](https://avaloniaui.net/) - Excellent cross-platform UI framework
+- [FluentAvalonia](https://github.com/amwx/FluentAvalonia) - Beautiful Fluent Design component library
+- [ReactiveUI](https://www.reactiveui.net/) - Powerful reactive MVVM framework
+- [Anthropic](https://www.anthropic.com/) - Providing powerful Claude AI services
 
-## 📞 联系我们
+## 📞 Contact
 
-- **GitHub Issues**: [报告问题或建议](https://github.com/AIDotNet/SemanticCode/issues)
-- **GitHub Discussions**: [技术讨论和交流](https://github.com/AIDotNet/SemanticCode/discussions)
+- **GitHub Issues**: [Report issues or suggestions](https://github.com/AIDotNet/SemanticCode/issues)
+- **GitHub Discussions**: [Technical discussions and community](https://github.com/AIDotNet/SemanticCode/discussions)
 
 ---
 
 <div align="center">
 
-**如果这个项目对您有帮助，请考虑给它一个 ⭐ Star！**
+**If this project helps you, please consider giving it a ⭐ Star!**
 
 Made with ❤️ by [AIDotNet](https://github.com/AIDotNet)
 
