@@ -305,8 +305,8 @@ public class AgentsManagementViewModel : ViewModelBase, IDisposable
         // 延迟加载以避免文件锁定问题
         Task.Delay(500).ContinueWith(_ => 
         {
-            LoadAgents();
-        }, TaskScheduler.FromCurrentSynchronizationContext());
+            Dispatcher.UIThread.Post(LoadAgents);
+        });
     }
     
     private void OnFileRenamed(object sender, RenamedEventArgs e)
@@ -314,8 +314,8 @@ public class AgentsManagementViewModel : ViewModelBase, IDisposable
         System.Diagnostics.Debug.WriteLine($"File renamed: {e.OldName} -> {e.Name}");
         Task.Delay(500).ContinueWith(_ => 
         {
-            LoadAgents();
-        }, TaskScheduler.FromCurrentSynchronizationContext());
+            Dispatcher.UIThread.Post(LoadAgents);
+        });
     }
     
     private void OnAgentInstalled(object? sender, EventArgs e)
