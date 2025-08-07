@@ -59,7 +59,7 @@ public class VersionService
         response.EnsureSuccessStatusCode();
         
         var jsonContent = await response.Content.ReadAsStringAsync();
-        var releaseInfo = JsonSerializer.Deserialize<GitHubRelease>(jsonContent,AppSettingsContext.Default.Options);
+        var releaseInfo = JsonSerializer.Deserialize<GitHubRelease>(jsonContent,AppSettingsContext.DefaultOptions);
         
         return releaseInfo?.TagName?.TrimStart('v') ?? "0.0.0.0";
     }

@@ -1,0 +1,143 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SemanticCode.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="500"
+        x:Class="SemanticCode.Views.ConsoleLogWindow"
+        x:DataType="vm:ConsoleLogViewModel"
+        Title="{Binding Title}"
+        Width="700" Height="500"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True"
+        ShowInTaskbar="False">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="📋" FontSize="24" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Title}" 
+                              FontSize="20" 
+                              FontWeight="Bold"/>
+                    <TextBlock Text="安装过程详细日志" 
+                              FontSize="14" 
+                              Opacity="0.7"
+                              Margin="0,4,0,0"/>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- 日志内容区域 -->
+        <Border Grid.Row="1" 
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="15"
+                Margin="0,0,0,20">
+            <TextBox Text="{Binding LogContent}"
+                     Name="LogTextBox"
+                     FontFamily="Consolas, Courier New, monospace"
+                     FontSize="12"
+                     IsReadOnly="True"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                     Background="Transparent"
+                     BorderThickness="0" />
+        </Border>
+
+        <!-- 底部状态和按钮区域 -->
+        <StackPanel Grid.Row="2" Spacing="15">
+            <!-- 状态指示器 -->
+            <Border Background="{DynamicResource SystemFillColorSolidNeutralBackgroundBrush}"
+                    BorderBrush="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Padding="12">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <!-- 进行中指示器 -->
+                    <StackPanel Orientation="Horizontal" 
+                               Spacing="8"
+                               IsVisible="{Binding !IsCompleted}">
+                        <Ellipse Width="10" Height="10" 
+                                Fill="{DynamicResource SystemAccentColor}">
+                            <Ellipse.RenderTransform>
+                                <RotateTransform/>
+                            </Ellipse.RenderTransform>
+                            <Ellipse.Styles>
+                                <Style Selector="Ellipse">
+                                    <Style.Animations>
+                                        <Animation Duration="0:0:1" IterationCount="Infinite">
+                                            <KeyFrame Cue="0%">
+                                                <Setter Property="Opacity" Value="1"/>
+                                            </KeyFrame>
+                                            <KeyFrame Cue="50%">
+                                                <Setter Property="Opacity" Value="0.3"/>
+                                            </KeyFrame>
+                                            <KeyFrame Cue="100%">
+                                                <Setter Property="Opacity" Value="1"/>
+                                            </KeyFrame>
+                                        </Animation>
+                                    </Style.Animations>
+                                </Style>
+                            </Ellipse.Styles>
+                        </Ellipse>
+                        <TextBlock Text="安装进行中..." 
+                                  FontSize="13" 
+                                  VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- 成功指示器 -->
+                    <StackPanel Orientation="Horizontal" 
+                               Spacing="8">
+                        <StackPanel.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Path="IsCompleted"/>
+                                <Binding Path="!HasErrors"/>
+                            </MultiBinding>
+                        </StackPanel.IsVisible>
+                        <TextBlock Text="✅" FontSize="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="安装成功" 
+                                  FontSize="13" 
+                                  Foreground="{DynamicResource SystemFillColorSuccessBrush}"
+                                  VerticalAlignment="Center"
+                                  FontWeight="Medium"/>
+                    </StackPanel>
+
+                    <!-- 失败指示器 -->
+                    <StackPanel Orientation="Horizontal" 
+                               Spacing="8"
+                               IsVisible="{Binding HasErrors}">
+                        <TextBlock Text="❌" FontSize="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="安装失败" 
+                                  FontSize="13" 
+                                  Foreground="{DynamicResource SystemFillColorCriticalBrush}"
+                                  VerticalAlignment="Center"
+                                  FontWeight="Medium"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- 按钮区域 -->
+            <StackPanel Orientation="Horizontal" 
+                       HorizontalAlignment="Right" 
+                       Spacing="12">
+                <Button Content="关闭"
+                       Command="{Binding CloseCommand}"
+                       IsEnabled="{Binding CanClose}"
+                       Classes="accent"
+                       Padding="20,8"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -10,7 +10,7 @@ namespace SemanticCode.Services;
 
 public class ClaudeCodeProfileService
 {
-    private static readonly JsonSerializerOptions JsonOptions = new(AppSettingsContext.Default.Options)
+    private static readonly JsonSerializerOptions JsonOptions = new(AppSettingsContext.DefaultOptions)
     {
         WriteIndented = true,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase

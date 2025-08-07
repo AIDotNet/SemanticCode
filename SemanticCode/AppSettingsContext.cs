@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using SemanticCode.Models;
 using SemanticCode.Services;
 
@@ -12,4 +13,5 @@ namespace SemanticCode;
 [JsonSerializable(typeof(AgentHubResponse))]
 internal partial class AppSettingsContext : JsonSerializerContext
 {
+    public static JsonSerializerOptions DefaultOptions => Default.Options;
 }

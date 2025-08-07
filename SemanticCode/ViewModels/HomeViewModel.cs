@@ -14,6 +14,8 @@ using System.Net.Http;
 using System.Text;
 using SemanticCode.Services;
 using SemanticCode.Views;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 
 namespace SemanticCode.ViewModels;
 
@@ -33,6 +35,8 @@ public class HomeViewModel : ViewModelBase
     private readonly UpdateService _updateService;
     private readonly UpdateConfigService _updateConfigService;
     private bool _hasCheckedForUpdatesThisSession = false;
+    private ConsoleLogWindow? _consoleWindow;
+    private ConsoleLogViewModel? _consoleViewModel;
 
     public string Title { get; } = "Semantic Code";
     public string WelcomeMessage { get; } = "欢迎使用 Semantic Code 一款Claude Code工具。";
@@ -451,7 +455,11 @@ public class HomeViewModel : ViewModelBase
         if (IsInstalling) return;
         
         IsInstalling = true;
-        ConsoleOutput = "";
+        
+        // 创建并显示控制台窗口
+        await ShowConsoleWindowAsync();
+        
+        bool installationSuccessful = false;
         
         try
         {
@@ -474,7 +482,7 @@ public class HomeViewModel : ViewModelBase
             }
             else
             {
-                AddConsoleOutput("Git 已安装，跳过安装\n");
+                AddConsoleOutput("Git 已经安装，跳过安装\n");
             }
             
             // 设置环境变量（只在Windows且未检测到时需要）
@@ -499,14 +507,29 @@ public class HomeViewModel : ViewModelBase
             
             AddConsoleOutput("\n所有组件安装完成!\n");
             await RefreshStatusAsync();
+            installationSuccessful = true;
         }
         catch (Exception ex)
         {
             AddConsoleOutput($"\n安装过程中出现错误: {ex.Message}\n");
+            installationSuccessful = false;
         }
         finally
         {
             IsInstalling = false;
+            
+            // 更新控制台窗口状态
+            if (_consoleViewModel != null)
+            {
+                _consoleViewModel.SetCompleted(installationSuccessful);
+                
+                // 如果安装成功，延迟3秒后自动关闭窗口
+                if (installationSuccessful)
+                {
+                    await Task.Delay(3000);
+                    CloseConsoleWindow();
+                }
+            }
         }
     }
 
@@ -527,7 +550,7 @@ public class HomeViewModel : ViewModelBase
             await File.WriteAllBytesAsync(tempPath, await response.Content.ReadAsByteArrayAsync());
             AddConsoleOutput("下载完成，开始安装...\n");
             
-            var result = await RunCommandAsync("msiexec", $"/i \"{tempPath}\" /quiet /qn", 300000);
+            var result = await RunCommandWithRealtimeOutputAsync("msiexec", $"/i \"{tempPath}\" /quiet /qn", 300000);
             
             if (result.Success)
             {
@@ -563,7 +586,7 @@ public class HomeViewModel : ViewModelBase
             await File.WriteAllBytesAsync(tempPath, await response.Content.ReadAsByteArrayAsync());
             AddConsoleOutput("下载完成，开始安装...\n");
             
-            var result = await RunCommandAsync(tempPath, "/VERYSILENT /NORESTART", 300000);
+            var result = await RunCommandWithRealtimeOutputAsync(tempPath, "/VERYSILENT /NORESTART", 300000);
             
             if (result.Success || result.ExitCode == 0)
             {
@@ -624,12 +647,11 @@ public class HomeViewModel : ViewModelBase
         
         try
         {
-            var result = await RunCommandAsync("npm", "install -g @anthropic-ai/claude-code", 120000);
+            var result = await RunCommandWithRealtimeOutputAsync("cmd", "/c npm install -g @anthropic-ai/claude-code", 120000);
             
             if (result.Success)
             {
                 AddConsoleOutput("Claude Code 安装完成\n");
-                AddConsoleOutput(result.Output);
             }
             else
             {
@@ -646,10 +668,124 @@ public class HomeViewModel : ViewModelBase
 
     private void AddConsoleOutput(string text)
     {
-        ConsoleOutput += $"[{DateTime.Now:HH:mm:ss}] {text}";
+        var formattedText = $"[{DateTime.Now:HH:mm:ss}] {text}";
+        ConsoleOutput += formattedText;
+        
+        // 同时更新控制台窗口的日志
+        if (_consoleViewModel != null)
+        {
+            Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+            {
+                _consoleViewModel.AppendLog(formattedText);
+            });
+        }
+    }
+
+    private async Task ShowConsoleWindowAsync()
+    {
+        await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            var mainWindow = Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
+                ? desktop.MainWindow
+                : null;
+
+            if (mainWindow != null)
+            {
+                _consoleViewModel = new ConsoleLogViewModel();
+                _consoleWindow = new ConsoleLogWindow(_consoleViewModel);
+                
+                // 订阅关闭事件
+                _consoleViewModel.CloseRequested += (s, e) => CloseConsoleWindow();
+                
+                _consoleWindow.Show(mainWindow);
+            }
+        });
+    }
+
+    private void CloseConsoleWindow()
+    {
+        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            if (_consoleWindow != null)
+            {
+                _consoleWindow.Close();
+                _consoleWindow = null;
+            }
+            
+            if (_consoleViewModel != null)
+            {
+                _consoleViewModel.CloseRequested -= (s, e) => CloseConsoleWindow();
+                _consoleViewModel = null;
+            }
+        });
     }
 
     private async Task<CommandResult> RunCommandAsync(string command, string arguments, int timeoutMs = 30000)
+    {
+        return await Task.Run(() =>
+        {
+            try
+            {
+                var processInfo = new ProcessStartInfo
+                {
+                    FileName = command,
+                    Arguments = arguments,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true,
+                    
+                    WindowStyle = ProcessWindowStyle.Hidden
+                };
+
+                using var process = Process.Start(processInfo);
+                if (process == null)
+                {
+                    return new CommandResult { Success = false, Error = "无法启动进程" };
+                }
+
+                var output = new StringBuilder();
+                var error = new StringBuilder();
+
+                process.OutputDataReceived += (_, e) =>
+                {
+                    if (!string.IsNullOrEmpty(e.Data))
+                        output.AppendLine(e.Data);
+                };
+
+                process.ErrorDataReceived += (_, e) =>
+                {
+                    if (!string.IsNullOrEmpty(e.Data))
+                        error.AppendLine(e.Data);
+                };
+
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+
+                var finished = process.WaitForExit(timeoutMs);
+                
+                if (!finished)
+                {
+                    process.Kill();
+                    return new CommandResult { Success = false, Error = "命令执行超时" };
+                }
+
+                return new CommandResult
+                {
+                    Success = process.ExitCode == 0,
+                    ExitCode = process.ExitCode,
+                    Output = output.ToString(),
+                    Error = error.ToString()
+                };
+            }
+            catch (Exception ex)
+            {
+                return new CommandResult { Success = false, Error = ex.Message };
+            }
+        });
+    }
+
+    private async Task<CommandResult> RunCommandWithRealtimeOutputAsync(string command, string arguments, int timeoutMs = 30000)
     {
         return await Task.Run(() =>
         {
@@ -678,13 +814,21 @@ public class HomeViewModel : ViewModelBase
                 process.OutputDataReceived += (_, e) =>
                 {
                     if (!string.IsNullOrEmpty(e.Data))
+                    {
                         output.AppendLine(e.Data);
+                        // 实时输出到控制台
+                        AddConsoleOutput($"{e.Data}\n");
+                    }
                 };
 
                 process.ErrorDataReceived += (_, e) =>
                 {
                     if (!string.IsNullOrEmpty(e.Data))
+                    {
                         error.AppendLine(e.Data);
+                        // 实时输出错误到控制台
+                        AddConsoleOutput($"ERROR: {e.Data}\n");
+                    }
                 };
 
                 process.BeginOutputReadLine();

@@ -53,7 +53,7 @@ public class AgentHubService
             try
             {
                 var response = await _httpClient.GetStringAsync(HubApiUrl);
-                hubData = JsonSerializer.Deserialize<AgentHubResponse>(response, AppSettingsContext.Default.Options);
+                hubData = JsonSerializer.Deserialize<AgentHubResponse>(response, AppSettingsContext.DefaultOptions);
             }
             catch (Exception netEx)
             {
@@ -126,7 +126,7 @@ public class AgentHubService
                 Data = hubData
             };
 
-            var json = JsonSerializer.Serialize(cacheData, AppSettingsContext.Default.Options);
+            var json = JsonSerializer.Serialize(cacheData, AppSettingsContext.DefaultOptions);
             await File.WriteAllTextAsync(_cacheFilePath, json);
         }
         catch (Exception ex)
@@ -153,7 +153,7 @@ public class AgentHubService
                 // 检查磁盘缓存是否过期（更长的过期时间，比如24小时）
                 if (DateTime.Now - timestamp < TimeSpan.FromHours(24))
                 {
-                    return JsonSerializer.Deserialize<AgentHubResponse>(dataElement.GetRawText(), AppSettingsContext.Default.Options);
+                    return JsonSerializer.Deserialize<AgentHubResponse>(dataElement.GetRawText(), AppSettingsContext.DefaultOptions);
                 }
             }
 
