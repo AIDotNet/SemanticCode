@@ -6,15 +6,54 @@ namespace SemanticCode.Desktop;
 
 public static class Logger
 {
-    private static readonly string LogDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
     private static readonly object LockObject = new object();
-
-    static Logger()
+    private static string? _logDirectory;
+    
+    private static string LogDirectory
     {
-        // 确保日志目录存在
-        if (!Directory.Exists(LogDirectory))
+        get
         {
-            Directory.CreateDirectory(LogDirectory);
+            if (_logDirectory == null)
+            {
+                try
+                {
+                    _logDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
+                    if (!Directory.Exists(_logDirectory))
+                    {
+                        Directory.CreateDirectory(_logDirectory);
+                    }
+                }
+                catch
+                {
+                    // 如果无法创建在应用程序目录，尝试使用临时目录
+                    try
+                    {
+                        _logDirectory = Path.Combine(Path.GetTempPath(), "SemanticCode", "Logs");
+                        if (!Directory.Exists(_logDirectory))
+                        {
+                            Directory.CreateDirectory(_logDirectory);
+                        }
+                    }
+                    catch
+                    {
+                        // 如果都失败了，使用当前目录
+                        _logDirectory = Path.Combine(Environment.CurrentDirectory, "Logs");
+                        try
+                        {
+                            if (!Directory.Exists(_logDirectory))
+                            {
+                                Directory.CreateDirectory(_logDirectory);
+                            }
+                        }
+                        catch
+                        {
+                            // 最后的备选：当前目录
+                            _logDirectory = Environment.CurrentDirectory;
+                        }
+                    }
+                }
+            }
+            return _logDirectory;
         }
     }
 
