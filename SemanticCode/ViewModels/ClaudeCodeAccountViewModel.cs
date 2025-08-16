@@ -198,6 +198,7 @@ public class ClaudeCodeAccountViewModel : ViewModelBase
     public ICommand RefreshDataCommand { get; }
     public ICommand EditMcpCommand { get; }
     public ICommand ViewSessionHistoryCommand { get; }
+    public ICommand ContinueSessionCommand { get; }
 
     public ICommand OpenClaudeCommand { get; }
 
@@ -207,8 +208,33 @@ public class ClaudeCodeAccountViewModel : ViewModelBase
         EditMcpCommand = ReactiveCommand.Create<ProjectInfo>(EditMcp);
         ViewSessionHistoryCommand = ReactiveCommand.Create<ProjectInfo>(ViewSessionHistory);
         OpenClaudeCommand = ReactiveCommand.Create<ProjectInfo>(OpenClaudeConsole);
+        ContinueSessionCommand = ReactiveCommand.Create<ProjectInfo>(ContinueSession);
 
         _ = RefreshData();
+    }
+    
+    private void ContinueSession(ProjectInfo project)
+    {
+        try
+        {
+            if (project == null || string.IsNullOrEmpty(project.Path))
+                return;
+
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = "/c start cmd /k claude --continue",
+                UseShellExecute = false,
+                WorkingDirectory = project.Path,
+                CreateNoWindow = true
+            };
+
+            Process.Start(processStartInfo);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error continuing session: {ex.Message}");
+        }
     }
 
     private void OpenClaudeConsole(ProjectInfo project)
@@ -402,6 +428,14 @@ public class ClaudeCodeAccountViewModel : ViewModelBase
                     }
 
                     Projects.Add(projectInfo);
+                }
+                
+                // 按 ApiDurationRaw 降序排序
+                var sortedProjects = Projects.OrderByDescending(p => p.ApiDurationRaw).ToList();
+                Projects.Clear();
+                foreach (var project in sortedProjects)
+                {
+                    Projects.Add(project);
                 }
             }
         }

@@ -11,32 +11,41 @@
         <vm:ClaudeCodeAccountViewModel />
     </Design.DataContext>
 
-    <ScrollViewer>
-        <Grid Margin="20">
+    <ScrollViewer Padding="0">
+        <Grid Margin="24">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <!-- Header -->
-            <StackPanel Grid.Row="0" Margin="0,0,0,20">
-                <TextBlock Text="Claude Code账户信息管理" 
-                          FontSize="24" 
-                          FontWeight="Bold"
-                          Margin="0,0,0,10"/>
+            <StackPanel Grid.Row="0" Margin="0,0,0,32">
+                <TextBlock Text="Claude Code 账户管理" 
+                          FontSize="28" 
+                          FontWeight="SemiBold"
+                          Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                          Margin="0,0,0,8"/>
+                <TextBlock Text="管理您的 Claude Code 项目、会话和使用统计" 
+                          FontSize="14" 
+                          Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                          Margin="0,0,0,16"/>
                 <Button Content="刷新数据" 
                        Command="{Binding RefreshDataCommand}"
-                       HorizontalAlignment="Left"/>
+                       HorizontalAlignment="Left"
+                       Padding="16,8"
+                       CornerRadius="6"/>
             </StackPanel>
 
             <!-- Tab Control -->
             <TabControl Grid.Row="1" 
-                       SelectedIndex="{Binding SelectedTabIndex}">
+                       SelectedIndex="{Binding SelectedTabIndex}"
+                       Background="Transparent"
+                       Margin="0,8,0,0">
                 
                 <!-- Tab 1: Account Info and Usage Statistics -->
                 <TabItem Header="账户信息">
                     <ScrollViewer>
-                        <StackPanel Spacing="20" Margin="20">
+                        <StackPanel Spacing="24" Margin="24">
                             
                             <!-- Account Information -->
                             <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
@@ -214,20 +223,24 @@
 
                 <!-- Tab 2: Projects List and MCP Management -->
                 <TabItem Header="项目管理">
-                    <Grid Margin="20">
+                    <Grid Margin="24">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         
                         <!-- Projects Header -->
-                        <TextBlock Grid.Row="0" 
-                                  Text="项目列表" 
-                                  FontSize="18" 
-                                  FontWeight="SemiBold"
-                                  Margin="0,0,0,15"/>
+                        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                            <TextBlock Text="项目列表" 
+                                      FontSize="20" 
+                                      FontWeight="SemiBold"
+                                      Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                      Margin="0,0,0,4"/>
+                            <TextBlock Text="查看和管理您的 Claude Code 项目" 
+                                      FontSize="13" 
+                                      Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        </StackPanel>
                         
-                        <!-- Projects DataGrid -->
                         <DataGrid Grid.Row="1" 
                                  ItemsSource="{Binding Projects}"
                                  AutoGenerateColumns="False"
@@ -235,63 +248,89 @@
                                  HeadersVisibility="Column"
                                  CanUserReorderColumns="True"
                                  CanUserResizeColumns="True"
-                                 CanUserSortColumns="True">
+                                 CanUserSortColumns="True"
+                                 ColumnWidth="*"
+                                 Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                 BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                 BorderThickness="1"
+                                 CornerRadius="8"
+                                 Padding="0">
+                            
+                            <!-- 右键菜单 -->
+                            <DataGrid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="编辑MCP配置" 
+                                             Command="{Binding $parent[UserControl].((vm:ClaudeCodeAccountViewModel)DataContext).EditMcpCommand}"
+                                             CommandParameter="{Binding}"/>
+                                    <MenuItem Header="继续会话" 
+                                             Command="{Binding $parent[UserControl].((vm:ClaudeCodeAccountViewModel)DataContext).ContinueSessionCommand}"
+                                             CommandParameter="{Binding}"/>
+                                    <MenuItem Header="打开Claude Code" 
+                                             Command="{Binding $parent[UserControl].((vm:ClaudeCodeAccountViewModel)DataContext).OpenClaudeCommand}"
+                                             CommandParameter="{Binding}"/>
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="项目名称" 
                                                    Binding="{Binding Name}" 
-                                                   Width="150"/>
+                                                   Width="*" MinWidth="120"/>
                                 <DataGridTextColumn Header="项目路径" 
                                                    Binding="{Binding Path}" 
-                                                   Width="200"/>
+                                                   Width="2*" MinWidth="200"/>
                                 <DataGridTextColumn Header="消费金额" 
                                                    Binding="{Binding Cost, StringFormat=${0:F4}}" 
-                                                   Width="100"/>
+                                                   Width="Auto" MinWidth="80"/>
                                 <DataGridTextColumn Header="输入Token" 
                                                    Binding="{Binding InputTokensDisplay}" 
-                                                   Width="100"/>
+                                                   Width="Auto" MinWidth="80"/>
                                 <DataGridTextColumn Header="输出Token" 
                                                    Binding="{Binding OutputTokensDisplay}" 
-                                                   Width="100"/>
+                                                   Width="Auto" MinWidth="80"/>
                                 <DataGridTextColumn Header="API时长" 
                                                    Binding="{Binding ApiDurationDisplay}" 
                                                    SortMemberPath="ApiDurationRaw"
-                                                   Width="100"/>
-                                <DataGridTemplateColumn Header="操作" Width="180">
+                                                   Width="Auto" MinWidth="80"/>
+                                <DataGridTemplateColumn Header="操作" Width="130" MinWidth="130">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal" 
-                                                       Spacing="8" 
+                                                       Spacing="6" 
                                                        HorizontalAlignment="Center"
-                                                       VerticalAlignment="Center">
+                                                       VerticalAlignment="Center"
+                                                       Margin="4">
                                                 
                                                 <!-- 编辑MCP按钮 -->
                                                 <Button Command="{Binding $parent[DataGrid].((vm:ClaudeCodeAccountViewModel)DataContext).EditMcpCommand}"
                                                        CommandParameter="{Binding}"
                                                        ToolTip.Tip="编辑MCP配置"
+                                                       Background="{DynamicResource AccentFillColorDefaultBrush}"
                                                        Foreground="White"
                                                        BorderThickness="0"
-                                                       CornerRadius="4"
-                                                       Width="32"
-                                                       Height="32"
-                                                       Padding="0">
+                                                       CornerRadius="6"
+                                                       Width="36"
+                                                       Height="28"
+                                                       Padding="8,4">
                                                     <TextBlock Text="编辑" 
-                                                              FontSize="12" 
+                                                              FontSize="11" 
+                                                              FontWeight="Medium"
                                                               TextAlignment="Center"
                                                               VerticalAlignment="Center"/>
                                                 </Button>
                                                 
-                                                <!-- 查看会话按钮 -->
-                                                <Button Command="{Binding $parent[DataGrid].((vm:ClaudeCodeAccountViewModel)DataContext).ViewSessionHistoryCommand}"
+                                                <!-- 继续会话按钮 -->
+                                                <Button Command="{Binding $parent[DataGrid].((vm:ClaudeCodeAccountViewModel)DataContext).ContinueSessionCommand}"
                                                         CommandParameter="{Binding}"
-                                                        ToolTip.Tip="查看会话历史"
+                                                        ToolTip.Tip="继续会话 (claude --continue)"
+                                                        Background="{DynamicResource SystemFillColorSuccessBrush}"
                                                         Foreground="White"
                                                         BorderThickness="0"
-                                                        CornerRadius="4"
-                                                        Width="32"
-                                                        Height="32"
-                                                        Padding="0">
-                                                    <TextBlock Text="会话" 
-                                                              FontSize="12" 
+                                                        CornerRadius="6"
+                                                        Width="36"
+                                                        Height="28"
+                                                        Padding="8,4">
+                                                    <TextBlock Text="继续" 
+                                                              FontSize="11" 
+                                                              FontWeight="Medium"
                                                               TextAlignment="Center"
                                                               VerticalAlignment="Center"/>
                                                 </Button>
@@ -300,14 +339,16 @@
                                                 <Button Command="{Binding $parent[DataGrid].((vm:ClaudeCodeAccountViewModel)DataContext).OpenClaudeCommand}"
                                                         CommandParameter="{Binding}"
                                                         ToolTip.Tip="打开Claude Code"
+                                                        Background="{DynamicResource SystemFillColorAttentionBrush}"
                                                         Foreground="White"
                                                         BorderThickness="0"
-                                                        CornerRadius="4"
-                                                        Width="32"
-                                                        Height="32"
-                                                        Padding="0">
+                                                        CornerRadius="6"
+                                                        Width="36"
+                                                        Height="28"
+                                                        Padding="8,4">
                                                     <TextBlock Text="打开" 
-                                                              FontSize="12" 
+                                                              FontSize="11" 
+                                                              FontWeight="Medium"
                                                               TextAlignment="Center"
                                                               VerticalAlignment="Center"/>
                                                 </Button>
@@ -322,17 +363,22 @@
 
                 <!-- Tab 3: Session Analytics -->
                 <TabItem Header="会话分析">
-                    <Grid Margin="20">
+                    <Grid Margin="24">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         
-                        <TextBlock Grid.Row="0" 
-                                  Text="项目会话分析" 
-                                  FontSize="18" 
-                                  FontWeight="SemiBold"
-                                  Margin="0,0,0,15"/>
+                        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                            <TextBlock Text="项目会话分析" 
+                                      FontSize="20" 
+                                      FontWeight="SemiBold"
+                                      Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                      Margin="0,0,0,4"/>
+                            <TextBlock Text="分析每个项目的会话数据和趋势" 
+                                      FontSize="13" 
+                                      Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        </StackPanel>
                         
                         <DataGrid Grid.Row="1" 
                                  ItemsSource="{Binding SessionAnalytics}"
@@ -370,17 +416,22 @@
 
                 <!-- Tab 4: Model Usage Statistics -->
                 <TabItem Header="模型使用">
-                    <Grid Margin="20">
+                    <Grid Margin="24">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         
-                        <TextBlock Grid.Row="0" 
-                                  Text="模型使用统计" 
-                                  FontSize="18" 
-                                  FontWeight="SemiBold"
-                                  Margin="0,0,0,15"/>
+                        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                            <TextBlock Text="模型使用统计" 
+                                      FontSize="20" 
+                                      FontWeight="SemiBold"
+                                      Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                      Margin="0,0,0,4"/>
+                            <TextBlock Text="查看不同 AI 模型的使用情况和成本" 
+                                      FontSize="13" 
+                                      Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        </StackPanel>
                         
                         <DataGrid Grid.Row="1" 
                                  ItemsSource="{Binding ModelUsageStats}"
@@ -412,19 +463,25 @@
 
                 <!-- Tab 5: Project Activity Ranking -->
                 <TabItem Header="项目活跃度">
-                    <Grid Margin="20">
+                    <Grid Margin="24">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         
-                        <StackPanel Grid.Row="0" Spacing="10" Margin="0,0,0,15">
+                        <StackPanel Grid.Row="0" Spacing="4" Margin="0,0,0,20">
                             <TextBlock Text="项目活跃度排行" 
-                                      FontSize="18" 
-                                      FontWeight="SemiBold"/>
+                                      FontSize="20" 
+                                      FontWeight="SemiBold"
+                                      Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                            <TextBlock Text="按活跃度排列您的项目" 
+                                      FontSize="13" 
+                                      Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
                             <TextBlock Text="{Binding MostActiveProject, StringFormat='最活跃项目: {0}'}" 
                                       FontSize="14" 
-                                      Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"/>
+                                      FontWeight="Medium"
+                                      Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"
+                                      Margin="0,8,0,0"/>
                         </StackPanel>
                         
                         <DataGrid Grid.Row="1" 

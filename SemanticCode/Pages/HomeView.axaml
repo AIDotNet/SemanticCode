@@ -77,20 +77,7 @@
                                FontWeight="SemiBold"/>
                     
                     <!-- Installation Status Grid -->
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        
-                        <!-- Claude Code Status -->
+                    <Grid ColumnDefinitions="*,100,Auto" RowDefinitions="Auto,Auto,Auto,Auto">
                         <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Spacing="12">
                             <TextBlock Text="🤖" FontSize="16"/>
                             <TextBlock Text="Claude Code" FontSize="14" VerticalAlignment="Center"/>

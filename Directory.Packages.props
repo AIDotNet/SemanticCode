@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <Version>0.1.14.0</Version>
+    <Version>0.1.15.0</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
     <InformationalVersion>$(Version)</InformationalVersion>
@@ -10,7 +10,6 @@
     <Product>SemanticCode</Product>
     <Authors>AIDotNet</Authors>
     <Description>SemanticCode is a cross-platform desktop application for managing and interacting with AI agents, built using Avalonia UI.</Description>
-    
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Avalonia" Version="11.3.3" />
